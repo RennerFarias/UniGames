@@ -5,10 +5,10 @@ Fala galera, deixei esse resumo aqui pra vocês saberem o que eu já fiz no back
 ### O que já está pronto e funcionando:
 * **Banco conectado:** Já configurei a conexão com o MongoDB Atlas pelo `.env`. Tá rodando liso.
 * **Rotas de Jogos:** Criei o model de jogos e todas as rotas (`/jogos`) para cadastrar, listar (com busca e paginação), atualizar e deletar. Tudo testado e funcionando.
-* **Estrutura das pastas:** Já criei os arquivos de rotas, controllers e models (vazios) para anúncios, usuários e relatórios. A estrutura já está pronta para o resto do projeto.
+* **Anúncios de Revenda:** Rotas (`/anuncios`) públicas prontas e integradas com o banco para cadastrar, listar (trazendo os dados do jogo associado) e remover anúncios de mídia física de forma simples.
+* **Estrutura das pastas:** Já criei os arquivos de rotas, controllers e models para anúncios, usuários e relatórios. A estrutura já está pronta para o resto do projeto.
 
 ###  O que a gente precisa fazer (pra dividir o trabalho):
-* **Anúncios de Revenda:** Fazer as rotas para criar e listar os anúncios de mídia física da galera (públicos, sem exigir login por enquanto).
 * **Histórico de preços:** Modelar e programar como vamos salvar e exibir a variação de preço de cada jogo.
 * **Login/JWT:** Esperar as aulas de JWT e criptografia para fazermos o login e perfil do usuário do jeito certo.
 * **Relatórios:** Fazer as rotas para gerar os dados do dashboard (jogos em destaque, etc.).
@@ -59,6 +59,36 @@ Certifique-se de que o backend está rodando localmente em `http://localhost:300
 ### 3. Remover Jogo
 * **Método:** `DELETE`
 * **URL:** `http://localhost:3000/jogos/:id` *(Substitua `:id` pelo ID real do jogo obtido na listagem)*
+
+## Como testar os Anúncios de Revenda (Mídia Física)
+
+### 1. Adicionar Anúncio (Cadastrar)
+* **Método:** `POST`
+* **URL:** `http://localhost:3000/anuncios`
+* **Headers:** `Content-Type: application/json`
+* **Corpo (JSON - raw):**
+```json
+{
+  "jogo": "COLOQUE_O_ID_DE_UM_JOGO_AQUI",
+  "preco": 150.00,
+  "estadoConservacao": "Excelente",
+  "plataforma": "PS5",
+  "contato": {
+    "nome": "Renner Farias",
+    "info": "83999999999"
+  },
+  "descricao": "Mídia física impecável, sem arranhões. Aceito trocas."
+}
+```
+
+### 2. Listar Anúncios
+* **Método:** `GET`
+* **URL Básica (Lista todos os anúncios com dados do jogo inclusos):** `http://localhost:3000/anuncios`
+* **Filtros Opcionais (Query Params):** `plataforma`, `estadoConservacao`, `limite`, `pagina`
+
+### 3. Remover Anúncio
+* **Método:** `DELETE`
+* **URL:** `http://localhost:3000/anuncios/:id` *(Substitua `:id` pelo ID real do anúncio obtido na listagem de anúncios)*
 
 ---
 
