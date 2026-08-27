@@ -28,6 +28,4 @@ Pesquisar o melhor preço de um jogo em várias lojas ao mesmo tempo é cansativ
 
 Elian Barros · Igor Morais · José Artur · Rafael Barbosa · Renner Farias
 
----
-
 <sub>Projeto acadêmico — Sistemas de Informação, CESED/UNIFACISA · Competência: Integrar Interfaces e Serviço Web · Prof. Sheila Maria · 2026.2</sub>
