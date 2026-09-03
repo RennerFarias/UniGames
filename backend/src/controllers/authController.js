@@ -1,7 +1,7 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
-const Usuario = require('../models/Usuario');
+const User = require('../models/User');
 
 const cadastrarUsuario = async (req, res) => {
     try {
@@ -13,7 +13,7 @@ const cadastrarUsuario = async (req, res) => {
             });
         }
 
-        const usuarioExistente = await Usuario.findOne({ email });
+        const usuarioExistente = await User.findOne({ email });
 
         if (usuarioExistente) {
             return res.status(409).json({
@@ -23,7 +23,7 @@ const cadastrarUsuario = async (req, res) => {
 
         const senhaCriptografada = await bcrypt.hash(senha, 10);
 
-        const usuario = new Usuario({
+        const usuario = new User({
             nome,
             email,
             senha: senhaCriptografada
@@ -54,7 +54,7 @@ const login = async (req, res) => {
     try {
         const { email, senha } = req.body;
 
-        const usuario = await Usuario.findOne({ email });
+        const usuario = await User.findOne({ email });
 
         if (!usuario) {
             return res.status(401).json({

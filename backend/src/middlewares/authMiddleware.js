@@ -21,7 +21,7 @@ const autenticar = (req, res, next) => {
 
     try {
         const decoded = jwt.verify(token, process.env.JWT_SECRET || 'unigames_chave_secreta_2026');
-        req.usuario = decoded;
+        req.User = decoded;
         return next();
     } catch (error) {
         return res.status(401).json({
