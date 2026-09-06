@@ -9,10 +9,12 @@ const conectarBanco = require('./database');
 const authRoutes = require('./routes/authRoutes');
 const jogoRoutes = require('./routes/jogoRoutes');
 const revendaRoutes = require('./routes/revendaRoutes');
+const usuarioRoutes = require('./routes/usuarioRoutes');
 
 const app = express();
 
 app.use(express.json());
+app.use(usuarioRoutes);
 
 conectarBanco();
 

@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const autenticar = require('../middlewares/authMiddleware');
+const { autenticar } = require('../middlewares/authMiddleware');
 const {
     cadastrarJogo,
     listarJogos,
