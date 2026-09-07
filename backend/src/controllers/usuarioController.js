@@ -93,8 +93,26 @@ const removerUsuario = async (req, res) => {
     }
 };
 
+const listarUsuarios = async (req, res) => {
+    try {
+        const usuarios = await User.find().select('-senha');
+
+        res.status(200).json({
+            status: 'Sucesso',
+            total: usuarios.length,
+            usuarios
+        });
+    } catch (error) {
+        res.status(500).json({
+            mensagem: 'Erro ao listar usuários',
+            erro: error.message
+        });
+    }
+};
+
 module.exports = {
     obterPerfil,
     atualizarPerfil,
-    removerUsuario
+    removerUsuario,
+    listarUsuarios
 };
