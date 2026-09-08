@@ -1,6 +1,9 @@
 const express = require('express');
+
 const router = express.Router();
+
 const { autenticar } = require('../middlewares/authMiddleware');
+
 const {
     criarAnuncio,
     listarAnuncios,
@@ -8,12 +11,16 @@ const {
     obterAnuncioPorId,
     atualizarAnuncio
 } = require('../controllers/revendaController');
-const { autenticar } = require('../middlewares/authMiddleware');
+
 
 router.post('/anuncios', autenticar, criarAnuncio);
+
 router.get('/anuncios', autenticar, listarAnuncios);
-router.get('/anuncios/:id', obterAnuncioPorId)
-router.put('/anuncios/:id', atualizarAnuncio)
+
+router.get('/anuncios/:id', obterAnuncioPorId);
+
+router.put('/anuncios/:id', atualizarAnuncio);
+
 router.delete('/anuncios/:id', autenticar, deletarAnuncio);
 
 
