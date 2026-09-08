@@ -65,8 +65,8 @@ const resolvers = {
 
   Mutation: {
     createGame: async (_, { input }, context) => {
-      if (!context.usuario) {
-        throw new Error('Usuário não autenticado');
+      if (!context.usuario || context.usuario.perfil !== 'admin') {
+          throw new Error('Apenas administradores podem realizar esta ação');
       }
 
       if (!input.titulo || !input.titulo.trim()) {
@@ -82,9 +82,9 @@ const resolvers = {
     },
 
     deleteGame: async (_, { id }, context) => {
-      if (!context.usuario) {
-        throw new Error('Usuário não autenticado');
-      }
+      if (!context.usuario || context.usuario.perfil !== 'admin') {
+        throw new Error('Apenas administradores podem realizar esta ação');
+    }
 
       try {
         const result = await Game.deleteOne({ _id: id });
