@@ -100,9 +100,17 @@ const atualizarJogo = async (req, res) => {
         const { id } = req.params;
         const { titulo, descricao, generos, plataformas, imagemCapa, linksReferencia } = req.body;
 
+        const dadosAtualizados = {};
+        if (titulo) dadosAtualizados.titulo = titulo;
+        if (descricao !== undefined) dadosAtualizados.descricao = descricao;
+        if (generos) dadosAtualizados.generos = generos;
+        if (plataformas) dadosAtualizados.plataformas = plataformas;
+        if (imagemCapa !== undefined) dadosAtualizados.imagemCapa = imagemCapa;
+        if (linksReferencia) dadosAtualizados.linksReferencia = linksReferencia;
+
         const jogoAtualizado = await Game.findByIdAndUpdate(
             id,
-            { titulo, descricao, generos, plataformas, imagemCapa, linksReferencia },
+            dadosAtualizados,
             { new: true, runValidators: true }
         );
 
