@@ -52,6 +52,7 @@ const listarJogos = async (req, res) => {
         const skip = (parseInt(pagina) - 1) * parseInt(limite);
 
         const jogos = await Game.find(query)
+            .sort({ createdAt: -1 })
             .skip(skip)
             .limit(parseInt(limite));
 
