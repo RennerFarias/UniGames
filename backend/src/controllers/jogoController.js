@@ -33,7 +33,7 @@ const cadastrarJogo = async (req, res) => {
 // Listar jogos
 const listarJogos = async (req, res) => {
     try {
-        const { titulo, genero, plataforma, limite = 10, pagina = 1 } = req.query;
+        const { titulo, genero, plataforma, limite = 50, pagina = 1 } = req.query;
 
         const query = {};
 
