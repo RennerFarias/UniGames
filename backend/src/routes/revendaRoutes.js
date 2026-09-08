@@ -15,11 +15,11 @@ const {
 
 router.post('/anuncios', autenticar, criarAnuncio);
 
-router.get('/anuncios', autenticar, listarAnuncios);
+router.get('/anuncios', listarAnuncios);
 
 router.get('/anuncios/:id', obterAnuncioPorId);
 
-router.put('/anuncios/:id', atualizarAnuncio);
+router.put('/anuncios/:id', autenticar, atualizarAnuncio);
 
 router.delete('/anuncios/:id', autenticar, deletarAnuncio);
 
