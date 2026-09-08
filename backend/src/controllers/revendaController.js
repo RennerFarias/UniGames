@@ -102,8 +102,62 @@ const deletarAnuncio = async (req, res) => {
     }
 };
 
+// Pesquisa anúncio por id
+const obterAnuncioPorId = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const anuncio = await Listing.findById(id).populate('jogo');
+
+        if (!anuncio) {
+            return res.status(404).json({ error: "Anúncio não encontrado." });
+        }
+
+        res.status(200).json({
+            status: "Sucesso",
+            anuncio
+        });
+    } catch (error) {
+        if (error.kind === 'ObjectId') {
+            return res.status(400).json({ error: "ID de anúncio inválido." });
+        }
+        res.status(500).json({ error: error.message });
+    }
+};
+
+// Atualiza um anúncio por ID
+const atualizarAnuncio = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { preco, estadoConservacao, plataforma, contato, descricao } = req.body;
+        const dadosAtualizados = {};
+        if (preco !== undefined) dadosAtualizados.preco = preco;
+        if (estadoConservacao) dadosAtualizados.estadoConservacao = estadoConservacao;
+        if (plataforma) dadosAtualizados.plataforma = plataforma;
+        if (contato) dadosAtualizados.contato = contato;
+        if (descricao !== undefined) dadosAtualizados.descricao = descricao;
+
+        const anuncioAtualizado = await Listing.findByIdAndUpdate(id, dadosAtualizados, { new: true, runValidators: true });
+
+        if (!anuncioAtualizado) {
+            return res.status(404).json({ error: "Anúncio não encontrado." });
+        }
+
+        res.status(200).json({
+            status: "Sucesso",
+            anuncio: anuncioAtualizado
+        });
+    } catch (error) {
+        if (error.kind === 'ObjectId') {
+            return res.status(400).json({ error: "ID de anúncio inválido." });
+        }
+        res.status(500).json({ error: error.message });
+    }
+};
+
 module.exports = {
     criarAnuncio,
     listarAnuncios,
-    deletarAnuncio
+    deletarAnuncio,
+    obterAnuncioPorId,
+    atualizarAnuncio
 };
