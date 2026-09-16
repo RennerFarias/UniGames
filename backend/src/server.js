@@ -4,6 +4,7 @@ dns.setServers(['8.8.8.8']);
 require('dotenv').config();
 
 const express = require('express');
+const cors = require('cors');
 const jwt = require('jsonwebtoken');
 const {
     expressMiddleware
@@ -18,6 +19,7 @@ const authRoutes = require('./routes/authRoutes');
 const jogoRoutes = require('./routes/jogoRoutes');
 const revendaRoutes = require('./routes/revendaRoutes');
 const usuarioRoutes = require('./routes/usuarioRoutes');
+const relatorioRoutes = require('./routes/relatorioRoutes');
 
 const {
     typeDefs,
@@ -26,14 +28,15 @@ const {
 
 const app = express();
 
-app.use(express.json());
-app.use(usuarioRoutes);
-
 conectarBanco();
 
+app.use(cors());
+app.use(express.json());
+app.use(usuarioRoutes);
 app.use(authRoutes);
 app.use(jogoRoutes);
 app.use(revendaRoutes);
+app.use(relatorioRoutes);
 
 const obterUsuarioDoToken = (req) => {
     const authorization = req.headers.authorization;
