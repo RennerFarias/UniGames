@@ -8,10 +8,10 @@ function Navbar() {
                 <div className="navbar-links">
                     <Link to="/">Início</Link>
                     <Link to="/revenda">Revenda</Link>
-                    <Link to="/perfil">Perfil</Link>
                     <Link to="/suporte">Suporte</Link>
                     <Link to="/sobre-nos">Sobre Nós</Link>
                     <Link to="/configuracoes">Configurações</Link>
+                    <Link to="/perfil">Perfil</Link>
                 </div>
             </div>
         </nav>
