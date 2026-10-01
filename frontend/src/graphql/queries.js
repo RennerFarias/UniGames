@@ -43,3 +43,14 @@ export const GET_FEATURED_OFFERS = gql`
     }
   }
 `;
+
+export const ME = gql`
+  query Me {
+    me {
+      id
+      nome
+      email
+      perfil
+    }
+  }
+`;

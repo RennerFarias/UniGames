@@ -13,6 +13,7 @@ import Perfil from "./pages/Perfil";
 import Configuracoes from "./pages/Configuracoes";
 import SobreNos from "./pages/SobreNos";
 import Suporte from "./pages/Suporte";
+import Login from "./pages/Login";
 
 import "./index.css";
 
@@ -28,6 +29,7 @@ function App() {
         <Route path="/configuracoes" element={<Configuracoes />} />
         <Route path="/sobre-nos" element={<SobreNos />} />
         <Route path="/suporte" element={<Suporte />} />
+        <Route path="/login" element={<Login />} />
       </Routes>
     </BrowserRouter>
   );
