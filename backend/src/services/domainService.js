@@ -116,7 +116,7 @@ function calcularIdade(dataNascimento) {
 
 async function tornarRevendedor(dataNascimentoInput, user) {
   requireUser(user);
-  if (user.revendedor) return user; 
+  if (user.revendedor) return User.findById(user.id).select('-senha');
   
   const dataFinal = dataNascimentoInput || user.dataNascimento;
   

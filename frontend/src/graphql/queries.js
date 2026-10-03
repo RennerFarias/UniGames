@@ -1,5 +1,5 @@
 import { gql } from '@apollo/client';
-export const USER_FIELDS = gql`fragment UserFields on User { id nome email perfil foto createdAt updatedAt }`;
+export const USER_FIELDS = gql`fragment UserFields on User { id nome email perfil foto dataNascimento revendedor createdAt updatedAt }`;
 export const GAME_FIELDS = gql`fragment GameFields on Game { id titulo descricao generos plataformas imagemCapa linksReferencia createdAt updatedAt }`;
 export const OFFER_FIELDS = gql`fragment OfferFields on PriceOffer { id loja preco precoOriginal descontoPercentual urlLoja historicoPrecos { preco data } updatedAt jogo { ...GameFields } } ${GAME_FIELDS}`;
 export const LISTING_FIELDS = gql`fragment ListingFields on Listing { id preco estadoConservacao plataforma contato { nome info } descricao status vendidoEm createdAt updatedAt vendedor { id nome perfil } jogo { ...GameFields } } ${GAME_FIELDS}`;
