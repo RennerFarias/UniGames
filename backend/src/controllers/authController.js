@@ -5,7 +5,7 @@ const User = require('../models/User');
 
 const cadastrarUsuario = async (req, res) => {
     try {
-        const { senha } = req.body;
+        const { senha, dataNascimento } = req.body;
         const nome = String(req.body.nome || '').trim();
         const email = String(req.body.email || '').trim().toLowerCase();
 
@@ -27,11 +27,16 @@ const cadastrarUsuario = async (req, res) => {
 
         const senhaCriptografada = await bcrypt.hash(senha, 10);
 
-        const usuario = new User({
+        const dadosNovoUsuario = {
             nome,
             email,
             senha: senhaCriptografada
-        });
+        };
+        if (dataNascimento) {
+            dadosNovoUsuario.dataNascimento = dataNascimento;
+        }
+
+        const usuario = new User(dadosNovoUsuario);
 
         const usuarioSalvo = await usuario.save();
 

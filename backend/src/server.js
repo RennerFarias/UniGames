@@ -55,8 +55,8 @@ const obterUsuarioDoToken = async (req) => {
     try {
         const claims = jwt.verify(token, process.env.JWT_SECRET);
         const User = require('./models/User');
-        const current = await User.findById(claims.id).select('perfil email');
-        return current ? { id: current.id, email: current.email, perfil: current.perfil } : null;
+        const current = await User.findById(claims.id).select('perfil email dataNascimento revendedor');
+        return current ? { id: current.id, email: current.email, perfil: current.perfil, dataNascimento: current.dataNascimento, revendedor: current.revendedor } : null;
     } catch (error) {
         return null;
     }

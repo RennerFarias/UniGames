@@ -1,5 +1,6 @@
 const bcrypt = require('bcryptjs');
 const User = require('../models/User');
+const domain = require('../services/domainService')
 
 const obterPerfil = async (req, res) => {
     try {
@@ -25,11 +26,12 @@ const obterPerfil = async (req, res) => {
 
 const atualizarPerfil = async (req, res) => {
     try {
-        const { nome, email, senha, foto } = req.body;
+        const { nome, email, senha, foto, dataNascimento } = req.body;
 
         const dadosAtualizados = {};
 
         if (nome) dadosAtualizados.nome = String(nome).trim();
+        if (dataNascimento !== undefined) dadosAtualizados.dataNascimento = dataNascimento;
         if (foto !== undefined) dadosAtualizados.foto = String(foto).trim();
         if (email) {
             dadosAtualizados.email = String(email).trim().toLowerCase();
@@ -115,9 +117,24 @@ const listarUsuarios = async (req, res) => {
     }
 };
 
+const tornarRevendedor = async (req, res) => {
+    try {
+        const usuarioAtualizado = await domain.tornarRevendedor(req.body.dataNascimento, req.usuario);
+        res.status(200).json({
+            status: 'Sucesso',
+            mensagem: 'Conta atualizada para revendedor com sucesso.',
+            usuario: usuarioAtualizado
+        });
+    } catch (error) {
+        const statusCode = error.extensions?.code === 'FORBIDDEN' ? 403 : 400;
+        res.status(statusCode).json({ mensagem: error.message });
+    }
+};
+
 module.exports = {
     obterPerfil,
     atualizarPerfil,
     removerUsuario,
-    listarUsuarios
+    listarUsuarios,
+    tornarRevendedor
 };

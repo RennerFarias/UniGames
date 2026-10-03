@@ -8,6 +8,8 @@ const typeDefs = gql`
     email: String!
     perfil: String!
     foto: String
+    dataNascimento: String
+    revendedor: Boolean!
     createdAt: String
     updatedAt: String
   }
@@ -96,6 +98,7 @@ const typeDefs = gql`
     nome: String!
     email: String!
     senha: String!
+    dataNascimento: String
   }
 
   input LoginInput {
@@ -108,6 +111,7 @@ const typeDefs = gql`
     nome: String
     email: String
     senha: String
+    dataNascimento: String
   }
 
   input CreateGameInput {
@@ -199,6 +203,7 @@ const typeDefs = gql`
     login(input: LoginInput!): AuthPayload!
     updateProfile(input: UpdateUserInput!): User!
     deleteUser(id: ID!): Boolean!
+    tornarRevendedor(dataNascimento: String): User!
 
     createGame(input: CreateGameInput!): Game!
     updateGame(id: ID!, input: UpdateGameInput!): Game!

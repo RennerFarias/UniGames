@@ -7,12 +7,19 @@ const PriceOffer = require('../models/PriceOffer');
 const Review = require('../models/Review');
 const User = require('../models/User');
 const error = (message, code = 'BAD_USER_INPUT') => { throw new GraphQLError(message, { extensions: { code } }); };
+
 const requireUser = user => user || error('Sua sessão expirou. Entre novamente.', 'UNAUTHENTICATED');
+
 const requireAdmin = user => { requireUser(user); if (user.perfil !== 'admin') error('Apenas administradores podem realizar esta ação.', 'FORBIDDEN'); };
+
 const validId = id => { if (!mongoose.isValidObjectId(id)) error('Identificador inválido.'); return id; };
+
 const existsGame = async id => { validId(id); if (!await Game.exists({ _id: id })) error('Jogo não encontrado.', 'NOT_FOUND'); };
+
 const publicListings = { $or: [{ status: 'ativo' }, { status: { $exists: false } }] };
+
 const populated = query => query.populate('jogo').populate('vendedor', 'nome perfil');
+
 const ownListing = async (id, user) => {
   requireUser(user); validId(id);
   const row = await Listing.findById(id);
@@ -20,8 +27,11 @@ const ownListing = async (id, user) => {
   if (String(row.vendedor) !== String(user.id) && user.perfil !== 'admin') error('Você só pode alterar seus próprios anúncios.', 'FORBIDDEN');
   return row;
 };
+
 const priceCheck = (price, field = 'preço') => { if (typeof price !== 'number' || !Number.isFinite(price) || price < 0) error(`Informe um ${field} válido e não negativo.`); };
+
 const checkUrl = url => { if (!url) return; try { const parsed = new URL(url); if (['http:', 'https:'].includes(parsed.protocol)) return; } catch {} error('Use um link HTTP ou HTTPS válido.'); };
+
 const listingFields = input => {
   const fields = {}; ['preco', 'estadoConservacao', 'plataforma', 'contato', 'descricao', 'status'].forEach(key => { if (input[key] !== undefined) fields[key] = input[key]; });
   if (fields.preco !== undefined) priceCheck(fields.preco);
@@ -37,9 +47,12 @@ function offerFields(input) {
   if (fields.loja !== undefined) { fields.loja = String(fields.loja).trim(); if (!fields.loja) error('Informe o nome da loja.'); }
   return fields;
 }
+
 const discount = (price, original) => original > price ? Math.round((1 - price / original) * 100) : 0;
 async function createListing(input, user) {
-  requireUser(user); await existsGame(input.jogoId); priceCheck(input.preco);
+  requireUser(user); 
+  if (user.revendedor !== true && user.perfil !== 'admin') error('Apenas revendedores podem criar anúncios.', 'FORBIDDEN');
+  await existsGame(input.jogoId); priceCheck(input.preco);
   const row = await Listing.create({ ...listingFields(input), jogo: input.jogoId, vendedor: user.id, status: 'ativo', vendidoEm: null });
   return populated(Listing.findById(row.id));
 }
@@ -89,4 +102,46 @@ async function deleteUser(id, user) {
   if (await Listing.exists({ vendedor: id }) || await Review.exists({ $or: [{ avaliador: id }, { avaliadoUser: id }] })) error('Este usuário possui anúncios ou avaliações vinculados e não pode ser excluído.');
   const result = await User.deleteOne({ _id: id }); if (!result.deletedCount) error('Usuário não encontrado.', 'NOT_FOUND'); return true;
 }
-module.exports = { error, requireUser, requireAdmin, validId, publicListings, populated, createListing, updateListing, deleteListing, getMyListings, getMyReport, createPriceOffer, updatePriceOffer, createReview, deleteGame, deleteUser };
+
+function calcularIdade(dataNascimento) {
+  const hoje = new Date();
+  const nascimento = new Date(dataNascimento);
+  let idade = hoje.getFullYear() - nascimento.getFullYear();
+  const mes = hoje.getMonth() - nascimento.getMonth();
+  if (mes < 0 || (mes === 0 && hoje.getDate() < nascimento.getDate())) {
+    idade--;
+  }
+  return idade;
+}
+
+async function tornarRevendedor(dataNascimentoInput, user) {
+  requireUser(user);
+  if (user.revendedor) return user; 
+  
+  const dataFinal = dataNascimentoInput || user.dataNascimento;
+  
+  if (!dataFinal) {
+    error('Para se tornar um revendedor, você precisa informar sua data de nascimento.', 'BAD_USER_INPUT');
+  }
+  
+  const idadeAtiva = calcularIdade(dataFinal);
+  
+  if (idadeAtiva < 16) {
+    error('Você precisa ter pelo menos 16 anos para se tornar um revendedor.', 'FORBIDDEN');
+  }
+  
+  const updateData = { revendedor: true };
+  if (dataNascimentoInput) {
+    updateData.dataNascimento = new Date(dataNascimentoInput);
+  }
+  
+  const updatedUser = await User.findByIdAndUpdate(
+    user.id, 
+    { $set: updateData }, 
+    { new: true, runValidators: true }
+  ).select('-senha');
+  
+  return updatedUser;
+}
+
+module.exports = { error, requireUser, requireAdmin, validId, publicListings, populated, createListing, updateListing, deleteListing, getMyListings, getMyReport, createPriceOffer, updatePriceOffer, createReview, deleteGame, deleteUser, tornarRevendedor };
