@@ -1,0 +1,10 @@
+const router = require('express').Router();
+const { autenticar, autorizar } = require('../middlewares/authMiddleware');
+const c = require('../controllers/integrationController');
+router.get('/ofertas', c.offers);
+router.post('/ofertas', autenticar, autorizar('admin'), c.createOffer);
+router.put('/ofertas/:id', autenticar, autorizar('admin'), c.updateOffer);
+router.get('/avaliacoes', c.reviews);
+router.post('/avaliacoes', autenticar, c.createReview);
+router.get('/relatorios/minha-atividade', autenticar, c.myReport);
+module.exports = router;

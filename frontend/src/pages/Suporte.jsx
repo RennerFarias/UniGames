@@ -1,4 +1,13 @@
-function Suporte() {
-  return <div className="page"><h1>Suporte</h1></div>;
-}
-export default Suporte;
+import { Link } from 'react-router-dom';
+import PageTitle from '../components/PageTitle';
+import Icon from '../components/Icon';
+const questions = [
+  ['Como comparar preços?', 'Abra um jogo no catálogo e consulte a aba “Comparar ofertas”. Você verá as lojas e seus preços lado a lado. Use os filtros para encontrar gênero, plataforma e faixa de preço.'],
+  ['Como comprar um jogo?', 'Use o botão da oferta para abrir a loja em outra aba. A compra e o pagamento são feitos diretamente na loja. No modo de demonstração, os preços são ilustrativos e o link abre a página de referência do jogo.'],
+  ['Como anunciar um jogo físico?', 'Crie uma conta, entre em “Revenda” e escolha “Anunciar meu jogo”. Selecione o jogo, a plataforma, o estado da mídia, o preço e seu contato. O jogo precisa estar no catálogo.'],
+  ['Como registrar uma venda?', 'Abra “Meus anúncios”, edite o anúncio e altere o status para “Vendido”. O relatório usa o preço anunciado como valor declarado da venda.'],
+  ['Como funciona o histórico de preços?', 'Cada oferta mantém os preços registrados por loja. Quando um administrador atualiza uma oferta, o novo valor entra no histórico. O sistema não coleta preços de lojas automaticamente.'],
+  ['Como recuperar minha senha?', 'A recuperação por e-mail ainda não está disponível. Se você tem acesso à conta, pode alterar a senha em “Meu perfil”. Para problemas de acesso, procure a equipe responsável pelo projeto.'],
+  ['Os favoritos ficam salvos?', 'Sim. Os favoritos são armazenados neste navegador, separados por conta e modo de dados. Eles não são sincronizados entre dispositivos.'],
+];
+export default function Suporte() { return <><PageTitle eyebrow="A GENTE TE AJUDA NO PRÓXIMO PASSO" title="Central de ajuda" text="Respostas rápidas para você voltar ao que importa: encontrar o próximo jogo."/><div className="help-shortcuts"><Link className="panel" to="/explorar"><Icon name="search" size={28}/><h2>Encontrar jogos</h2><p>Explore o catálogo e compare lojas.</p><span>Ir para o catálogo →</span></Link><Link className="panel" to="/meus-anuncios"><Icon name="store" size={28}/><h2>Meus anúncios</h2><p>Edite, pause ou marque como vendido.</p><span>Gerenciar anúncios →</span></Link><Link className="panel" to="/perfil"><Icon name="user" size={28}/><h2>Minha conta</h2><p>Atualize seus dados e sua senha.</p><span>Abrir meu perfil →</span></Link></div><section className="faq"><h2>Perguntas frequentes</h2>{questions.map(([q, answer]) => <details key={q}><summary>{q}<Icon name="down" size={18}/></summary><p>{answer}</p></details>)}</section><div className="academic-note"><Icon name="gamepad" size={24}/><div><strong>Precisa falar com a equipe?</strong><p>O UniGames é um projeto acadêmico. Você encontra os responsáveis na página sobre nós.</p></div><Link className="btn secondary" to="/sobre-nos">Conhecer a equipe</Link></div></>; }

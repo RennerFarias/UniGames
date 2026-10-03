@@ -1,23 +1,11 @@
-# Status do Backend - UniGames 
+# Backend UniGames · Estado desta entrega
 
-### O que já está pronto e funcionando:
-* **Banco conectado:** Já configurei a conexão com o MongoDB Atlas pelo `.env`. Tá rodando liso.
-* **Autenticação JWT:** Cadastro de usuários (`/auth/cadastro`), login (`/auth/login`) com token JWT gerado e middleware de proteção (`authMiddleware.js`) aplicados nas rotas privadas.
-* **Rotas de Jogos:** Model e rotas (`/jogos`) para cadastrar (protegido por JWT), listar, atualizar e deletar.
-* **Anúncios de Revenda:** Rotas (`/anuncios`) para cadastrar, listar e remover anúncios de mídia física.
-* **Estrutura das pastas:** Estrutura pronta com controllers, middlewares, models, routes e graphql.
+Mantidos Express 5, Apollo Server 5, MongoDB/Mongoose e JWT. O schema GraphQL foi ampliado para os fluxos do front-end. As APIs REST oferecem os mesmos fluxos.
 
+O backend inclui propriedade e status de anúncios, relatório pessoal de vendas declaradas, ofertas, atualização de preço com histórico, avaliações e foto de perfil. As regras de revenda, preços e exclusões ficam em `src/services/domainService.js`.
 
-* **Início de utilização do Graphql:**
+Configure `backend/.env` com seu próprio `MONGODB_URI` e `JWT_SECRET`. O arquivo `.env` original não é distribuído. `npm ci` instala as dependências e `npm start` inicia a porta 3000 por padrão.
 
-Teste Rápido no Postman:
-1. **Cadastro:** `POST http://localhost:3000/auth/cadastro` -> `{ "nome": "User", "email": "a@a.com", "senha": "123" }`
+`npm test` valida as 23 operações GraphQL do front-end, sem acessar banco. `npm run seed:catalog` é opcional, acrescenta jogos sem apagar o catálogo e pode criar um administrador novo se as variáveis de seed forem definidas. Nenhum seed foi executado no MongoDB Atlas do usuário.
 
-2. **Login:** `POST http://localhost:3000/auth/login` -> `{ "email": "a@a.com", "senha": "123" }`
-
-3. **Rota Protegida:** `POST http://localhost:3000/jogos` -> Na aba **Auth** escolha **Bearer Token** e cole o token -> `{ "titulo": "God of War" }`
-
-<sub>Projeto acadêmico — Sistemas de Informação, CESED/UNIFACISA · Competência: Integrar Interfaces e Serviço Web · Prof. Sheila Maria · 2026.2</sub>
-
-
-
+O relatório consolida anúncios; não representa confirmação de pagamento. Não há coleta automática de preços externos.

@@ -1,54 +1,22 @@
 const jwt = require('jsonwebtoken');
-
-const autenticar = (req, res, next) => {
-    const authHeader = req.headers.authorization;
-
-    if (!authHeader) {
-        return res.status(401).json({
-            mensagem: 'Token de autenticação não fornecido'
-        });
-    }
-
-    const parts = authHeader.split(' ');
-
-    if (parts.length !== 2 || parts[0] !== 'Bearer') {
-        return res.status(401).json({
-            mensagem: 'Formato do token inválido. Use: Bearer <token>'
-        });
-    }
-
-    const token = parts[1];
-
-    try {
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        req.usuario = decoded;
-        return next();
-    } catch (error) {
-        return res.status(401).json({
-            mensagem: 'Token inválido ou expirado'
-        });
-    }
+const User = require('../models/User');
+const autenticar = async (req, res, next) => {
+  const authorization = req.headers.authorization || '';
+  const [tipo, token] = authorization.split(' ');
+  if (tipo !== 'Bearer' || !token) return res.status(401).json({ mensagem: 'Entre na sua conta para continuar.' });
+  try {
+    const claims = jwt.verify(token, process.env.JWT_SECRET);
+    const user = await User.findById(claims.id).select('perfil email');
+    if (!user) return res.status(401).json({ mensagem: 'Sessão inválida.' });
+    req.usuario = { id: user.id, email: user.email, perfil: user.perfil }; next();
+  } catch (error) {
+    if (['JsonWebTokenError', 'TokenExpiredError', 'NotBeforeError'].includes(error.name)) return res.status(401).json({ mensagem: 'Sua sessão expirou. Entre novamente.' });
+    return res.status(503).json({ mensagem: 'Não foi possível validar sua sessão. Tente novamente.' });
+  }
 };
-
-const autorizar = (...perfisPermitidos) => {
-    return (req, res, next) => {
-        if (!req.usuario) {
-            return res.status(401).json({
-                mensagem: 'Usuário não autenticado'
-            });
-        }
-
-        if (!perfisPermitidos.includes(req.usuario.perfil)) {
-            return res.status(403).json({
-                mensagem: 'Usuário não possui permissão'
-            });
-        }
-
-        next();
-    };
+const autorizar = (...perfis) => (req, res, next) => {
+  if (!req.usuario) return res.status(401).json({ mensagem: 'Entre na sua conta para continuar.' });
+  if (!perfis.includes(req.usuario.perfil)) return res.status(403).json({ mensagem: 'Usuário não possui permissão.' });
+  next();
 };
-
-module.exports = {
-    autenticar,
-    autorizar
-};
+module.exports = { autenticar, autorizar };

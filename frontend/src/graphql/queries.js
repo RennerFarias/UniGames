@@ -1,56 +1,16 @@
-import { gql } from "@apollo/client";
-
-export const GET_GAMES = gql`
-  query GetGames($search: String) {
-    getGames(search: $search) {
-      id
-      titulo
-      descricao
-      generos
-      plataformas
-      imagemCapa
-    }
-  }
-`;
-
-export const GET_GAME = gql`
-  query GetGame($id: ID!) {
-    getGame(id: $id) {
-      id
-      titulo
-      descricao
-      generos
-      plataformas
-      imagemCapa
-      linksReferencia
-    }
-  }
-`;
-
-export const GET_FEATURED_OFFERS = gql`
-  query GetFeaturedOffers {
-    getFeaturedOffers {
-      id
-      preco
-      precoOriginal
-      descontoPercentual
-      loja
-      jogo {
-        id
-        titulo
-        imagemCapa
-      }
-    }
-  }
-`;
-
-export const ME = gql`
-  query Me {
-    me {
-      id
-      nome
-      email
-      perfil
-    }
-  }
-`;
+import { gql } from '@apollo/client';
+export const USER_FIELDS = gql`fragment UserFields on User { id nome email perfil foto createdAt updatedAt }`;
+export const GAME_FIELDS = gql`fragment GameFields on Game { id titulo descricao generos plataformas imagemCapa linksReferencia createdAt updatedAt }`;
+export const OFFER_FIELDS = gql`fragment OfferFields on PriceOffer { id loja preco precoOriginal descontoPercentual urlLoja historicoPrecos { preco data } updatedAt jogo { ...GameFields } } ${GAME_FIELDS}`;
+export const LISTING_FIELDS = gql`fragment ListingFields on Listing { id preco estadoConservacao plataforma contato { nome info } descricao status vendidoEm createdAt updatedAt vendedor { id nome perfil } jogo { ...GameFields } } ${GAME_FIELDS}`;
+export const REVIEW_FIELDS = gql`fragment ReviewFields on Review { id nota comentario createdAt avaliador { id nome perfil } }`;
+export const GET_CATALOG = gql`query Catalog { getGames { ...GameFields } getPriceOffers { ...OfferFields } } ${GAME_FIELDS} ${OFFER_FIELDS}`;
+export const GET_GAME = gql`query GameDetail($id: ID!) { getGame(id: $id) { ...GameFields } getPriceHistory(jogoId: $id) { ...OfferFields } getReviews(jogoId: $id) { ...ReviewFields } } ${GAME_FIELDS} ${OFFER_FIELDS} ${REVIEW_FIELDS}`;
+export const GET_GAMES = gql`query GetGames($search: String) { getGames(search: $search) { ...GameFields } } ${GAME_FIELDS}`;
+export const GET_FEATURED_OFFERS = gql`query GetFeaturedOffers { getFeaturedOffers { ...OfferFields } } ${OFFER_FIELDS}`;
+export const GET_LISTINGS = gql`query Listings { getListings { ...ListingFields } } ${LISTING_FIELDS}`;
+export const GET_LISTING = gql`query ListingDetail($id: ID!) { getListing(id: $id) { ...ListingFields } } ${LISTING_FIELDS}`;
+export const GET_MY_LISTINGS = gql`query MyListings { getMyListings { ...ListingFields } } ${LISTING_FIELDS}`;
+export const ME = gql`query Me { me { ...UserFields } } ${USER_FIELDS}`;
+export const GET_REPORT = gql`query MyReport { getMyReport { anunciosAtivos anunciosVendidos valorVendas totalAnuncios porPlataforma { plataforma quantidade } } }`;
+export const GET_USERS = gql`query Users { getUsers { ...UserFields } } ${USER_FIELDS}`;

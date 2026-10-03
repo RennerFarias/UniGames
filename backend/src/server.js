@@ -32,13 +32,14 @@ conectarBanco();
 
 app.use(cors());
 app.use(express.json());
+app.use(require('./routes/integrationRoutes'));
 app.use(usuarioRoutes);
 app.use(authRoutes);
 app.use(jogoRoutes);
 app.use(revendaRoutes);
 app.use(relatorioRoutes);
 
-const obterUsuarioDoToken = (req) => {
+const obterUsuarioDoToken = async (req) => {
     const authorization = req.headers.authorization;
 
     if (!authorization) {
@@ -52,10 +53,10 @@ const obterUsuarioDoToken = (req) => {
     }
 
     try {
-        return jwt.verify(
-            token,
-            process.env.JWT_SECRET
-        );
+        const claims = jwt.verify(token, process.env.JWT_SECRET);
+        const User = require('./models/User');
+        const current = await User.findById(claims.id).select('perfil email');
+        return current ? { id: current.id, email: current.email, perfil: current.perfil } : null;
     } catch (error) {
         return null;
     }
@@ -73,7 +74,7 @@ const iniciarServidor = async () => {
         '/graphql',
         expressMiddleware(apolloServer, {
             context: async ({ req }) => {
-                const usuario = obterUsuarioDoToken(req);
+                const usuario = await obterUsuarioDoToken(req);
                 return {
                     usuario
                 };

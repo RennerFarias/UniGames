@@ -25,14 +25,19 @@ const obterPerfil = async (req, res) => {
 
 const atualizarPerfil = async (req, res) => {
     try {
-        const { nome, email, senha } = req.body;
+        const { nome, email, senha, foto } = req.body;
 
         const dadosAtualizados = {};
 
-        if (nome) dadosAtualizados.nome = nome;
-        if (email) dadosAtualizados.email = email;
+        if (nome) dadosAtualizados.nome = String(nome).trim();
+        if (foto !== undefined) dadosAtualizados.foto = String(foto).trim();
+        if (email) {
+            dadosAtualizados.email = String(email).trim().toLowerCase();
+            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(dadosAtualizados.email)) return res.status(400).json({ mensagem: 'E-mail inválido.' });
+        }
 
         if (senha) {
+            if (senha.length < 6) return res.status(400).json({ mensagem: 'A senha deve ter pelo menos 6 caracteres.' });
             dadosAtualizados.senha = await bcrypt.hash(senha, 10);
         }
 

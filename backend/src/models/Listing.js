@@ -1,6 +1,9 @@
 const mongoose = require('mongoose');
 
 const ListingSchema = new mongoose.Schema({
+    vendedor: { type: mongoose.Schema.Types.ObjectId, ref: 'User', index: true },
+    status: { type: String, enum: ['ativo', 'vendido', 'pausado'], default: 'ativo' },
+    vendidoEm: { type: Date, default: null },
     jogo: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Game',

@@ -7,6 +7,7 @@ const typeDefs = gql`
     nome: String!
     email: String!
     perfil: String!
+    foto: String
     createdAt: String
     updatedAt: String
   }
@@ -36,6 +37,9 @@ const typeDefs = gql`
   type Listing {
     id: ID!
     jogo: Game
+    vendedor: User
+    status: String!
+    vendidoEm: String
     preco: Float!
     estadoConservacao: String!
     plataforma: String!
@@ -43,6 +47,19 @@ const typeDefs = gql`
     descricao: String
     createdAt: String
     updatedAt: String
+  }
+
+  type PlatformCount {
+    plataforma: String!
+    quantidade: Int!
+  }
+
+  type ActivityReport {
+    totalAnuncios: Int!
+    anunciosAtivos: Int!
+    anunciosVendidos: Int!
+    valorVendas: Float!
+    porPlataforma: [PlatformCount!]!
   }
 
   type HistoricoPreco {
@@ -87,6 +104,7 @@ const typeDefs = gql`
   }
 
   input UpdateUserInput {
+    foto: String
     nome: String
     email: String
     senha: String
@@ -125,6 +143,7 @@ const typeDefs = gql`
   }
 
   input UpdateListingInput {
+    status: String
     preco: Float
     estadoConservacao: String
     plataforma: String
@@ -136,6 +155,13 @@ const typeDefs = gql`
     jogoId: ID!
     loja: String!
     preco: Float!
+    precoOriginal: Float
+    urlLoja: String
+  }
+
+  input UpdatePriceOfferInput {
+    loja: String
+    preco: Float
     precoOriginal: Float
     urlLoja: String
   }
@@ -156,6 +182,8 @@ const typeDefs = gql`
     getGame(id: ID!): Game
 
     getListings: [Listing!]!
+    getMyListings: [Listing!]!
+    getMyReport: ActivityReport!
     getListing(id: ID!): Listing
 
     getPriceOffers(jogoId: ID): [PriceOffer!]!
@@ -181,6 +209,7 @@ const typeDefs = gql`
     deleteListing(id: ID!): Boolean!
 
     createPriceOffer(input: CreatePriceOfferInput!): PriceOffer!
+    updatePriceOffer(id: ID!, input: UpdatePriceOfferInput!): PriceOffer!
     createReview(input: CreateReviewInput!): Review!
   }
 `;

@@ -5,13 +5,17 @@ const User = require('../models/User');
 
 const cadastrarUsuario = async (req, res) => {
     try {
-        const { nome, email, senha } = req.body;
+        const { senha } = req.body;
+        const nome = String(req.body.nome || '').trim();
+        const email = String(req.body.email || '').trim().toLowerCase();
 
         if (!nome || !email || !senha) {
             return res.status(400).json({
                 mensagem: 'Nome, email e senha são obrigatórios'
             });
         }
+
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || typeof senha !== 'string' || senha.length < 6) return res.status(400).json({ mensagem: 'Informe e-mail válido e senha com pelo menos 6 caracteres.' });
 
         const usuarioExistente = await User.findOne({ email });
 
@@ -37,7 +41,8 @@ const cadastrarUsuario = async (req, res) => {
                 id: usuarioSalvo._id,
                 nome: usuarioSalvo.nome,
                 email: usuarioSalvo.email,
-                perfil: usuarioSalvo.perfil
+                perfil: usuarioSalvo.perfil,
+                foto: usuarioSalvo.foto || ''
             }
         });
 
@@ -52,7 +57,9 @@ const cadastrarUsuario = async (req, res) => {
 
 const login = async (req, res) => {
     try {
-        const { email, senha } = req.body;
+        const { senha } = req.body;
+        const email = String(req.body.email || '').trim().toLowerCase();
+        if (!email || typeof senha !== 'string') return res.status(400).json({ mensagem: 'Informe e-mail e senha.' });
 
         const usuario = await User.findOne({ email });
 
@@ -77,7 +84,8 @@ const login = async (req, res) => {
             {
                 id: usuario._id,
                 email: usuario.email,
-                perfil: usuario.perfil
+                perfil: usuario.perfil,
+                foto: usuario.foto || ''
             },
             process.env.JWT_SECRET,
             {
@@ -92,7 +100,8 @@ const login = async (req, res) => {
                 id: usuario._id,
                 nome: usuario.nome,
                 email: usuario.email,
-                perfil: usuario.perfil
+                perfil: usuario.perfil,
+                foto: usuario.foto || ''
             }
         });
     } catch (error) {
