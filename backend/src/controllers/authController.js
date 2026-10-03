@@ -47,7 +47,9 @@ const cadastrarUsuario = async (req, res) => {
                 nome: usuarioSalvo.nome,
                 email: usuarioSalvo.email,
                 perfil: usuarioSalvo.perfil,
-                foto: usuarioSalvo.foto || ''
+                foto: usuarioSalvo.foto || '',
+                revendedor: usuarioSalvo.revendedor,
+                dataNascimento: usuarioSalvo.dataNascimento
             }
         });
 
@@ -106,9 +108,12 @@ const login = async (req, res) => {
                 nome: usuario.nome,
                 email: usuario.email,
                 perfil: usuario.perfil,
-                foto: usuario.foto || ''
+                foto: usuario.foto || '',
+                revendedor: usuario.revendedor,
+                dataNascimento: usuario.dataNascimento
             }
         });
+
     } catch (error) {
         res.status(500).json({
             mensagem: 'Erro ao realizar login',
@@ -116,6 +121,7 @@ const login = async (req, res) => {
         });
     }
 };
+
 module.exports = {
     cadastrarUsuario,
     login
