@@ -1,0 +1,123 @@
+query Catalogo {
+  getGames {
+    id
+    titulo
+    generos
+    plataformas
+  }
+  getPriceOffers {
+    id
+    loja
+    preco
+    descontoPercentual
+    jogo {
+      id
+      titulo
+    }
+  }
+}
+
+query MeuPerfil {
+  me {
+    id
+    nome
+    email
+    revendedor
+    dataNascimento
+  }
+}
+
+mutation Cadastro($input: RegisterInput!) {
+  register(input: $input) {
+    token
+    usuario {
+      id
+      nome
+      email
+    }
+  }
+}
+
+mutation Login($input: LoginInput!) {
+  login(input: $input) {
+    token
+    usuario {
+      id
+      nome
+      perfil
+    }
+  }
+}
+
+mutation AtivarRevenda($dataNascimento: String) {
+  tornarRevendedor(dataNascimento: $dataNascimento) {
+    id
+    revendedor
+    dataNascimento
+  }
+}
+
+mutation CriarAnuncio($input: CreateListingInput!) {
+  createListing(input: $input) {
+    id
+    preco
+    status
+    jogo {
+      id
+      titulo
+    }
+    vendedor {
+      id
+      nome
+    }
+  }
+}
+
+mutation EditarAnuncio($id: ID!, $input: UpdateListingInput!) {
+  updateListing(id: $id, input: $input) {
+    id
+    status
+    preco
+    vendidoEm
+  }
+}
+
+query MinhaAtividade {
+  getMyReport {
+    totalAnuncios
+    anunciosAtivos
+    anunciosVendidos
+    valorVendas
+    porPlataforma {
+      plataforma
+      quantidade
+    }
+  }
+}
+
+mutation EditarAvaliacao($id: ID!, $input: UpdateReviewInput!) {
+  updateReview(id: $id, input: $input) {
+    id
+    nota
+    comentario
+  }
+}
+
+mutation GerarRelatorio($tipo: ReportType!, $descricao: String) {
+  generateReport(tipo: $tipo, descricao: $descricao) {
+    id
+    tipo
+    dados
+    createdAt
+  }
+}
+
+query RelatoriosSalvos {
+  getReports {
+    id
+    tipo
+    dados
+    descricao
+    createdAt
+  }
+}

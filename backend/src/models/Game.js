@@ -1,34 +1,37 @@
 const mongoose = require('mongoose');
 
-const JogoSchema = new mongoose.Schema({
+const JogoSchema = new mongoose.Schema(
+  {
     titulo: {
-        type: String,
-        required: [true, 'O título do jogo é obrigatório.'],
-        trim: true
+      type: String,
+      required: [true, 'O título do jogo é obrigatório.'],
+      trim: true,
     },
     descricao: {
-        type: String,
-        trim: true
+      type: String,
+      trim: true,
     },
     generos: {
-        type: [String],
-        default: []
+      type: [String],
+      default: [],
     },
     plataformas: {
-        type: [String],
-        default: []
+      type: [String],
+      default: [],
     },
     imagemCapa: {
-        type: String,
-        trim: true
+      type: String,
+      trim: true,
     },
     linksReferencia: {
-        type: [String],
-        default: []
-    }
-}, {
-    timestamps: true
-});
+      type: [String],
+      default: [],
+    },
+  },
+  {
+    timestamps: true,
+  },
+);
 
 const Game = mongoose.model('Game', JogoSchema);
 

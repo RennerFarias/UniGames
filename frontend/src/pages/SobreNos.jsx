@@ -1,4 +1,70 @@
 import { Link } from 'react-router-dom';
 import PageTitle from '../components/PageTitle';
 import Icon from '../components/Icon';
-export default function SobreNos() { const team = ['Elian Barros', 'Igor Morais', 'José Artur', 'Rafael Barbosa', 'Renner Farias']; return <><PageTitle eyebrow="FEITO POR QUEM JOGA" title="Mais jogos. Melhores escolhas." text="A gente acredita que encontrar um bom jogo deveria ser tão divertido quanto jogar."/><section className="about-hero panel"><div><p className="eyebrow accent">POR QUE UNIGAMES?</p><h2>Menos abas abertas.<br/>Mais mundos para descobrir.</h2><p>O UniGames reúne jogos, ofertas de diferentes lojas e histórico de preços para facilitar a sua escolha. E quando você termina uma aventura, a revenda de mídia física ajuda outro jogador a começar a dele.</p><Link to="/explorar" className="btn primary">Conheça o catálogo <Icon name="arrow" size={17}/></Link></div><div className="about-mark"><Icon name="gamepad" size={100}/></div></section><section className="section"><div className="section-heading"><div><p className="eyebrow accent">QUEM ESTÁ POR TRÁS DO PLAY</p><h2>Uma equipe. A mesma paixão.</h2></div></div><div className="team-grid">{team.map((name, i) => <article className="panel team-member" key={name}><span style={{ '--avatar-hue': `${210 + i * 11}` }}>{name.split(' ').map(x => x[0]).slice(0, 2).join('')}</span><h3>{name}</h3><p>Sistemas de Informação</p></article>)}</div></section><section className="academic-note"><Icon name="info" size={23}/><div><strong>Um projeto que conecta interfaces e serviços web.</strong><p>CESED / UNIFACISA · Sistemas de Informação · 2026.2<br/>Professora Sheila Maria · Competência: Integrar interfaces e serviço web.</p></div></section></>; }
+export default function SobreNos() {
+  const team = ['Elian Barros', 'Igor Morais', 'José Artur', 'Rafael Barbosa', 'Renner Farias'];
+  return (
+    <>
+      <PageTitle
+        eyebrow="FEITO POR QUEM JOGA"
+        title="Mais jogos. Melhores escolhas."
+        text="A gente acredita que encontrar um bom jogo deveria ser tão divertido quanto jogar."
+      />
+      <section className="about-hero panel">
+        <div>
+          <p className="eyebrow accent">POR QUE UNIGAMES?</p>
+          <h2>
+            Menos abas abertas.
+            <br />
+            Mais mundos para descobrir.
+          </h2>
+          <p>
+            O UniGames reúne jogos, ofertas de diferentes lojas e histórico de preços para facilitar
+            a sua escolha. E quando você termina uma aventura, a revenda de mídia física ajuda outro
+            jogador a começar a dele.
+          </p>
+          <Link to="/explorar" className="btn primary">
+            Conheça o catálogo <Icon name="arrow" size={17} />
+          </Link>
+        </div>
+        <div className="about-mark">
+          <Icon name="gamepad" size={100} />
+        </div>
+      </section>
+      <section className="section">
+        <div className="section-heading">
+          <div>
+            <p className="eyebrow accent">QUEM ESTÁ POR TRÁS DO PLAY</p>
+            <h2>Uma equipe. A mesma paixão.</h2>
+          </div>
+        </div>
+        <div className="team-grid">
+          {team.map((name, i) => (
+            <article className="panel team-member" key={name}>
+              <span style={{ '--avatar-hue': `${210 + i * 11}` }}>
+                {name
+                  .split(' ')
+                  .map((x) => x[0])
+                  .slice(0, 2)
+                  .join('')}
+              </span>
+              <h3>{name}</h3>
+              <p>Sistemas de Informação</p>
+            </article>
+          ))}
+        </div>
+      </section>
+      <section className="academic-note">
+        <Icon name="info" size={23} />
+        <div>
+          <strong>Um projeto que conecta interfaces e serviços web.</strong>
+          <p>
+            CESED / UNIFACISA · Sistemas de Informação · 2026.2
+            <br />
+            Professora Sheila Maria · Competência: Integrar interfaces e serviço web.
+          </p>
+        </div>
+      </section>
+    </>
+  );
+}

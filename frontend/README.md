@@ -1,17 +1,9 @@
-# UniGames · Front-end
+# Frontend UniGames
 
-React 19 + Vite 8 + React Router + Apollo Client 4. Interface responsiva azul-marinho, catálogo, comparação de ofertas, mídia física, perfil, avaliações e relatórios.
+React com Vite. Os componentes usam o serviço exportado por `src/services/api.js`.
+A variável `VITE_DATA_SOURCE` escolhe GraphQL, REST ou demonstração local.
 
-```powershell
-npm.cmd ci
-npm.cmd run dev
-```
+Copie `.env.example` para `.env`, configure a origem dos dados e execute
+`npm ci` e `npm run dev`. O endereço padrão é http://localhost:5173.
 
-Abre em `http://localhost:5173`. A configuração padrão é demonstração local. Para GraphQL ou REST, leia o README na raiz do projeto e `docs/INTEGRACAO.md`.
-
-- `npm.cmd run build`: gera `dist`.
-- `npm.cmd run preview`: abre a versão compilada.
-- `npm.cmd run lint`: verificação estática.
-- `npm.cmd test`: testes da demonstração, sem banco externo.
-
-As classes do domínio ficam em `src/models/entities.js`. As queries/mutations seguem o schema do backend atualizado desta entrega.
+O passo a passo completo está no README da pasta principal.

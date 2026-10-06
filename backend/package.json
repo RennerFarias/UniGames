@@ -6,7 +6,8 @@
   "scripts": {
     "start": "node src/server.js",
     "test": "node --test test/*.test.cjs",
-    "seed:catalog": "node scripts/seed-catalog.js"
+    "seed:catalog": "node scripts/seed-catalog.js",
+    "test:integration": "node --test test/integration.test.cjs"
   },
   "keywords": [],
   "author": "",

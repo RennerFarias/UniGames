@@ -1,7 +1,8 @@
 const { gql } = require('graphql-tag');
 
 const typeDefs = gql`
-  # --- TIPOS PRINCIPAIS ---
+  scalar DateTime
+  scalar JSON
   type User {
     id: ID!
     nome: String!
@@ -10,8 +11,34 @@ const typeDefs = gql`
     foto: String
     dataNascimento: String
     revendedor: Boolean!
-    createdAt: String
-    updatedAt: String
+    createdAt: DateTime
+    updatedAt: DateTime
+  }
+
+  type PublicUser {
+    id: ID!
+    nome: String!
+    perfil: String!
+    foto: String
+    revendedor: Boolean!
+    createdAt: DateTime
+    updatedAt: DateTime
+  }
+
+  enum ReportType {
+    BUSCAS_FREQUENTES
+    VARIACAO_PRECOS
+    ATIVIDADE_USUARIOS
+    OFERTAS_DESTAQUE
+  }
+
+  type Report {
+    id: ID!
+    tipo: ReportType!
+    dados: JSON!
+    descricao: String
+    createdAt: DateTime
+    updatedAt: DateTime
   }
 
   type AuthPayload {
@@ -27,8 +54,8 @@ const typeDefs = gql`
     plataformas: [String!]!
     imagemCapa: String
     linksReferencia: [String!]!
-    createdAt: String
-    updatedAt: String
+    createdAt: DateTime
+    updatedAt: DateTime
   }
 
   type Contato {
@@ -39,16 +66,16 @@ const typeDefs = gql`
   type Listing {
     id: ID!
     jogo: Game
-    vendedor: User
+    vendedor: PublicUser
     status: String!
-    vendidoEm: String
+    vendidoEm: DateTime
     preco: Float!
     estadoConservacao: String!
     plataforma: String!
     contato: Contato!
     descricao: String
-    createdAt: String
-    updatedAt: String
+    createdAt: DateTime
+    updatedAt: DateTime
   }
 
   type PlatformCount {
@@ -66,7 +93,7 @@ const typeDefs = gql`
 
   type HistoricoPreco {
     preco: Float!
-    data: String
+    data: DateTime
   }
 
   type PriceOffer {
@@ -78,22 +105,21 @@ const typeDefs = gql`
     descontoPercentual: Float
     urlLoja: String
     historicoPrecos: [HistoricoPreco!]!
-    createdAt: String
-    updatedAt: String
+    createdAt: DateTime
+    updatedAt: DateTime
   }
 
   type Review {
     id: ID!
-    avaliador: User!
-    avaliadoUser: User
+    avaliador: PublicUser!
+    avaliadoUser: PublicUser
     jogo: Game
     nota: Int!
     comentario: String
-    createdAt: String
-    updatedAt: String
+    createdAt: DateTime
+    updatedAt: DateTime
   }
 
-  # --- ENTRADAS (INPUTS) ---
   input RegisterInput {
     nome: String!
     email: String!
@@ -177,17 +203,29 @@ const typeDefs = gql`
     comentario: String
   }
 
-  # --- CONSULTAS (QUERIES) ---
+  input UpdateReviewInput {
+    nota: Int
+    comentario: String
+  }
+
   type Query {
     me: User
     getUsers: [User!]!
+    getUser(id: ID!): PublicUser
 
-    getGames(search: String): [Game!]!
+    getGames(search: String, genero: String, plataforma: String): [Game!]!
     getGame(id: ID!): Game
 
-    getListings: [Listing!]!
+    getListings(
+      jogoId: ID
+      plataforma: String
+      estadoConservacao: String
+      precoMaximo: Float
+    ): [Listing!]!
     getMyListings: [Listing!]!
     getMyReport: ActivityReport!
+    getReports(tipo: ReportType): [Report!]!
+    getReport(id: ID!): Report
     getListing(id: ID!): Listing
 
     getPriceOffers(jogoId: ID): [PriceOffer!]!
@@ -197,7 +235,6 @@ const typeDefs = gql`
     getReviews(jogoId: ID, usuarioId: ID): [Review!]!
   }
 
-  # --- MUTATIONS ---
   type Mutation {
     register(input: RegisterInput!): AuthPayload!
     login(input: LoginInput!): AuthPayload!
@@ -216,6 +253,11 @@ const typeDefs = gql`
     createPriceOffer(input: CreatePriceOfferInput!): PriceOffer!
     updatePriceOffer(id: ID!, input: UpdatePriceOfferInput!): PriceOffer!
     createReview(input: CreateReviewInput!): Review!
+    updateReview(id: ID!, input: UpdateReviewInput!): Review!
+    deleteReview(id: ID!): Boolean!
+    deletePriceOffer(id: ID!): Boolean!
+    generateReport(tipo: ReportType!, descricao: String): Report!
+    deleteReport(id: ID!): Boolean!
   }
 `;
 

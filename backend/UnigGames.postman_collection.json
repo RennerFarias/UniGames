@@ -27,14 +27,9 @@
             "url": {
               "raw": "http://localhost:3000/auth/cadastro",
               "protocol": "http",
-              "host": [
-                "localhost"
-              ],
+              "host": ["localhost"],
               "port": "3000",
-              "path": [
-                "auth",
-                "cadastro"
-              ]
+              "path": ["auth", "cadastro"]
             }
           },
           "response": []
@@ -56,14 +51,9 @@
             "url": {
               "raw": "http://localhost:3000/auth/login",
               "protocol": "http",
-              "host": [
-                "localhost"
-              ],
+              "host": ["localhost"],
               "port": "3000",
-              "path": [
-                "auth",
-                "login"
-              ]
+              "path": ["auth", "login"]
             }
           },
           "response": []
@@ -91,14 +81,9 @@
             "url": {
               "raw": "http://localhost:3000/usuarios/perfil",
               "protocol": "http",
-              "host": [
-                "localhost"
-              ],
+              "host": ["localhost"],
               "port": "3000",
-              "path": [
-                "usuarios",
-                "perfil"
-              ]
+              "path": ["usuarios", "perfil"]
             }
           },
           "response": []
@@ -130,14 +115,9 @@
             "url": {
               "raw": "http://localhost:3000/usuarios/perfil",
               "protocol": "http",
-              "host": [
-                "localhost"
-              ],
+              "host": ["localhost"],
               "port": "3000",
-              "path": [
-                "usuarios",
-                "perfil"
-              ]
+              "path": ["usuarios", "perfil"]
             }
           },
           "response": []
@@ -160,14 +140,9 @@
             "url": {
               "raw": "http://localhost:3000/usuarios/6a9e2f846584b75a228d280c",
               "protocol": "http",
-              "host": [
-                "localhost"
-              ],
+              "host": ["localhost"],
               "port": "3000",
-              "path": [
-                "usuarios",
-                "6a9e2f846584b75a228d280c"
-              ]
+              "path": ["usuarios", "6a9e2f846584b75a228d280c"]
             }
           },
           "response": []
@@ -190,13 +165,9 @@
             "url": {
               "raw": "http://localhost:3000/usuarios",
               "protocol": "http",
-              "host": [
-                "localhost"
-              ],
+              "host": ["localhost"],
               "port": "3000",
-              "path": [
-                "usuarios"
-              ]
+              "path": ["usuarios"]
             }
           },
           "response": []
@@ -233,13 +204,9 @@
             "url": {
               "raw": "http://localhost:3000/jogos",
               "protocol": "http",
-              "host": [
-                "localhost"
-              ],
+              "host": ["localhost"],
               "port": "3000",
-              "path": [
-                "jogos"
-              ]
+              "path": ["jogos"]
             }
           },
           "response": []
@@ -252,13 +219,9 @@
             "url": {
               "raw": "http://localhost:3000/jogos",
               "protocol": "http",
-              "host": [
-                "localhost"
-              ],
+              "host": ["localhost"],
               "port": "3000",
-              "path": [
-                "jogos"
-              ]
+              "path": ["jogos"]
             }
           },
           "response": []
@@ -271,14 +234,9 @@
             "url": {
               "raw": "http://localhost:3000/jogos/6a9e2fdd6584b75a228d280d",
               "protocol": "http",
-              "host": [
-                "localhost"
-              ],
+              "host": ["localhost"],
               "port": "3000",
-              "path": [
-                "jogos",
-                "6a9e2fdd6584b75a228d280d"
-              ]
+              "path": ["jogos", "6a9e2fdd6584b75a228d280d"]
             }
           },
           "response": []
@@ -310,14 +268,9 @@
             "url": {
               "raw": "http://localhost:3000/jogos/6a9e2fdd6584b75a228d280d",
               "protocol": "http",
-              "host": [
-                "localhost"
-              ],
+              "host": ["localhost"],
               "port": "3000",
-              "path": [
-                "jogos",
-                "6a9e2fdd6584b75a228d280d"
-              ]
+              "path": ["jogos", "6a9e2fdd6584b75a228d280d"]
             }
           },
           "response": []
@@ -340,14 +293,9 @@
             "url": {
               "raw": "http://localhost:3000/jogos/6a90a9b366468444e7e225ed",
               "protocol": "http",
-              "host": [
-                "localhost"
-              ],
+              "host": ["localhost"],
               "port": "3000",
-              "path": [
-                "jogos",
-                "6a90a9b366468444e7e225ed"
-              ]
+              "path": ["jogos", "6a90a9b366468444e7e225ed"]
             }
           },
           "response": []
@@ -372,13 +320,9 @@
             "url": {
               "raw": "http://localhost:3000/graphql",
               "protocol": "http",
-              "host": [
-                "localhost"
-              ],
+              "host": ["localhost"],
               "port": "3000",
-              "path": [
-                "graphql"
-              ]
+              "path": ["graphql"]
             }
           },
           "response": []
@@ -408,13 +352,9 @@
             "url": {
               "raw": "http://localhost:3000/graphql",
               "protocol": "http",
-              "host": [
-                "localhost"
-              ],
+              "host": ["localhost"],
               "port": "3000",
-              "path": [
-                "graphql"
-              ]
+              "path": ["graphql"]
             }
           },
           "response": []
@@ -444,13 +384,9 @@
             "url": {
               "raw": "http://localhost:3000/graphql",
               "protocol": "http",
-              "host": [
-                "localhost"
-              ],
+              "host": ["localhost"],
               "port": "3000",
-              "path": [
-                "graphql"
-              ]
+              "path": ["graphql"]
             }
           },
           "response": []

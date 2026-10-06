@@ -1,8 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const {
-    obterOfertasDestaque,
-    obterHistoricoPrecos
+  obterOfertasDestaque,
+  obterHistoricoPrecos,
 } = require('../controllers/relatorioController');
 
 router.get('/relatorios/ofertas-destaque', obterOfertasDestaque);

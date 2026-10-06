@@ -1,30 +1,53 @@
-# Verificação da entrega
+# Verificação da revisão
 
-Verificado em 02/10/2026, com Node.js 24 e Chromium. A integração usou MongoDB 7 temporário e isolado. O MongoDB Atlas do arquivo original não foi acessado nem alterado durante esses testes.
+Revisão em 05/10/2026 (horário de Brasília), com Node.js 24.19.
+O backend foi testado com MongoDB 7.0.24 temporário e isolado. O Atlas
+configurado no arquivo original não foi acessado.
 
 | Verificação | Resultado |
 | --- | --- |
-| Compilação de produção (`npm run build`) | Aprovada; JavaScript dividido em aplicação, vendor e GraphQL |
-| Verificação estática (`npm run lint`) | Aprovada sem erros ou avisos de código |
-| Testes incluídos do modo demo | 4 aprovados |
-| Contratos GraphQL incluídos | 23 operações validadas contra o schema |
-| Integração de servidor GraphQL/REST com MongoDB temporário | 32 verificações aprovadas |
-| Fluxos de interface em GraphQL e REST com backend real de teste | 20 verificações aprovadas |
-| Fluxos de interface em demonstração e larguras móveis | 23 verificações aprovadas |
-| Inspeção visual | Home, catálogo, detalhes, revenda e telas auxiliares conferidos |
+| Contratos do frontend contra o schema GraphQL | 33 operações aprovadas |
+| Demonstração local | 6 testes aprovados |
+| Integração HTTP GraphQL/REST com MongoDB | 10 cenários aprovados |
+| Interface GraphQL em Chromium 153 | Cadastro, ativação, anúncio, edição, venda e relatório aprovados |
+| Compilação de produção do frontend | Aprovada |
+| Análise estática do frontend e código backend | Sem erros ou avisos de código |
 
-Os testes de servidor cobriram cadastro/login, JWT, permissões de admin, criação de jogos/ofertas, desconto, histórico de preço, propriedade dos anúncios, venda declarada, relatório, avaliação, perfil e rejeição de token de usuário removido.
+A integração tem um teste principal e dez subtestes, por isso o Node mostra
+11 testes aprovados. Ela cobre cadastro, senha com hash, login, sessão,
+permissões administrativas, pesquisa, idade de revendedor, proprietário de
+anúncio, status, venda declarada, relatório pessoal, desconto, histórico,
+avaliações, relatórios salvos, REST e bloqueio de exclusões com vínculos.
 
-Os testes do navegador exercitaram catálogo, histórico com datas retornadas pelo GraphQL, login, criação/edição de anúncios, venda declarada, relatórios, avaliações e atualização de perfil, usando ambos os adaptadores. No modo demo, também foram exercitados favoritos persistentes, cadastro, administração de catálogo/ofertas, exclusão confirmada e páginas móveis.
+## Repetir os testes
 
-A revisão de interface corrigiu a preservação da aba de ofertas após salvar preços no painel e incluiu saída da conta em telas móveis. Não foram observados erros de execução React nos fluxos testados.
+No PowerShell, partindo da pasta principal:
 
-Os scripts transitórios de navegação e MongoDB temporário foram usados na verificação desta entrega. Os testes que acompanham o projeto são os quatro testes demo e os 23 contratos, executáveis sem acessar um banco externo.
+```powershell
+npm.cmd test --prefix backend
+npm.cmd test --prefix frontend
+npm.cmd run lint --prefix frontend
+npm.cmd run build --prefix frontend
+```
 
-## Dependências de ambiente
+Sem `TEST_MONGODB_URI`, o teste de integração é ignorado. Os contratos GraphQL
+continuam sendo executados normalmente.
 
-A conexão no computador do grupo depende do `.env`, da disponibilidade do MongoDB e da rede. Os testes isolados comprovam os contratos e fluxos de integração; não validam as credenciais ou a conectividade do Atlas de vocês.
+Para testar a integração, use um MongoDB local com um banco exclusivo de teste:
 
-## Prévia visual
+```powershell
+cd backend
+$env:TEST_MONGODB_URI = 'mongodb://127.0.0.1:27017/unigames_test_revisao'
+npm.cmd run test:integration
+Remove-Item Env:TEST_MONGODB_URI
+```
 
-As capturas em `docs/previews` são do modo de demonstração com preços ilustrativos. Elas acompanham o código e não substituem o site em execução.
+Esse comando grava dados de teste e apaga somente o banco especificado ao
+final. O script recusa servidores remotos e nomes sem o prefixo
+`unigames_test_`.
+
+A conferência da interface usou o backend e um MongoDB temporário. Não houve erros de execução do React nos fluxos exercitados. A captura `docs/previews/relatorio-graphql.png` mostra esse teste. As demais capturas são as prévias de demonstração que já acompanhavam o projeto.
+
+A configuração real do grupo ainda depende da URI, das credenciais, das
+permissões de rede no Atlas e da disponibilidade do MongoDB. Os testes
+não validam o acesso ao cluster do grupo.

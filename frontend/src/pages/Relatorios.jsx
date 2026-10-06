@@ -8,6 +8,139 @@ import EmptyState from '../components/EmptyState';
 import Icon from '../components/Icon';
 import { money, fullDate, downloadCsv } from '../utils/format';
 export default function Relatorios() {
-  const { api } = useApp(); const { data, loading, error, reload } = useResource('report', async () => { const [report, listings] = await Promise.all([api.report(), api.myListings()]); return { report, listings }; });
-  return <><PageTitle eyebrow="ACOMPANHE SUA ATIVIDADE" title="Sua coleção em números" text="Um panorama dos seus anúncios e das vendas que você marcou como concluídas."/><AccountNav/>{loading ? <Loading/> : error ? <ErrorMessage message={error} onRetry={reload}/> : <><div className="metrics-row four"><div className="metric"><Icon name="store"/><span>Anúncios criados</span><strong>{data.report.totalAnuncios}</strong></div><div className="metric"><Icon name="tag"/><span>Disponíveis</span><strong>{data.report.anunciosAtivos}</strong></div><div className="metric"><Icon name="check"/><span>Marcados como vendidos</span><strong>{data.report.anunciosVendidos}</strong></div><div className="metric"><Icon name="chart"/><span>Valor declarado das vendas</span><strong>{money(data.report.valorVendas)}</strong></div></div><section className="panel"><div className="panel-heading"><h2>Seus anúncios por plataforma</h2></div>{data.report.porPlataforma.length ? <div className="platform-bars">{data.report.porPlataforma.map(p => <div className="platform-bar" key={p.plataforma}><span>{p.plataforma}</span><div><i style={{ width: `${p.quantidade / Math.max(...data.report.porPlataforma.map(x => x.quantidade)) * 100}%` }}/></div><strong>{p.quantidade}</strong></div>)}</div> : <p className="muted">Crie seu primeiro anúncio para acompanhar a distribuição.</p>}</section><section className="panel section"><div className="panel-heading"><h2>Relatório de anúncios e vendas</h2><button className="btn secondary small" disabled={!data.listings.length} onClick={() => downloadCsv('unigames-relatorio.csv', ['Jogo', 'Plataforma', 'Preço (BRL)', 'Status', 'Criado em', 'Vendido em'], data.listings.map(l => [l.jogo?.titulo, l.plataforma, l.preco.toFixed(2).replace('.', ','), l.status, fullDate(l.createdAt), fullDate(l.vendidoEm)]))}><Icon name="download" size={16}/>Exportar CSV</button></div>{data.listings.length ? <div className="table-wrap"><table><thead><tr><th>Jogo</th><th>Plataforma</th><th>Valor</th><th>Status</th><th>Data de venda</th></tr></thead><tbody>{data.listings.map(l => <tr key={l.id}><td>{l.jogo?.titulo || 'Jogo removido'}</td><td>{l.plataforma}</td><td>{money(l.preco)}</td><td><span className={`status ${l.status}`}>{({ ativo: 'Disponível', vendido: 'Vendido', pausado: 'Pausado' })[l.status]}</span></td><td>{fullDate(l.vendidoEm)}</td></tr>)}</tbody></table></div> : <EmptyState icon="chart" title="Seu relatório começa no primeiro anúncio"/>}<p className="small-note">Os valores correspondem a anúncios marcados manualmente como vendidos. O sistema não confirma transações ou pagamentos.</p></section></>}</>;
+  const { api } = useApp();
+  const { data, loading, error, reload } = useResource('report', async () => {
+    const [report, listings] = await Promise.all([api.report(), api.myListings()]);
+    return { report, listings };
+  });
+  return (
+    <>
+      <PageTitle
+        eyebrow="ACOMPANHE SUA ATIVIDADE"
+        title="Sua coleção em números"
+        text="Um panorama dos seus anúncios e das vendas que você marcou como concluídas."
+      />
+      <AccountNav />
+      {loading ? (
+        <Loading />
+      ) : error ? (
+        <ErrorMessage message={error} onRetry={reload} />
+      ) : (
+        <>
+          <div className="metrics-row four">
+            <div className="metric">
+              <Icon name="store" />
+              <span>Anúncios criados</span>
+              <strong>{data.report.totalAnuncios}</strong>
+            </div>
+            <div className="metric">
+              <Icon name="tag" />
+              <span>Disponíveis</span>
+              <strong>{data.report.anunciosAtivos}</strong>
+            </div>
+            <div className="metric">
+              <Icon name="check" />
+              <span>Marcados como vendidos</span>
+              <strong>{data.report.anunciosVendidos}</strong>
+            </div>
+            <div className="metric">
+              <Icon name="chart" />
+              <span>Valor declarado das vendas</span>
+              <strong>{money(data.report.valorVendas)}</strong>
+            </div>
+          </div>
+          <section className="panel">
+            <div className="panel-heading">
+              <h2>Seus anúncios por plataforma</h2>
+            </div>
+            {data.report.porPlataforma.length ? (
+              <div className="platform-bars">
+                {data.report.porPlataforma.map((p) => (
+                  <div className="platform-bar" key={p.plataforma}>
+                    <span>{p.plataforma}</span>
+                    <div>
+                      <i
+                        style={{
+                          width: `${(p.quantidade / Math.max(...data.report.porPlataforma.map((x) => x.quantidade))) * 100}%`,
+                        }}
+                      />
+                    </div>
+                    <strong>{p.quantidade}</strong>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p className="muted">Crie seu primeiro anúncio para acompanhar a distribuição.</p>
+            )}
+          </section>
+          <section className="panel section">
+            <div className="panel-heading">
+              <h2>Relatório de anúncios e vendas</h2>
+              <button
+                className="btn secondary small"
+                disabled={!data.listings.length}
+                onClick={() =>
+                  downloadCsv(
+                    'unigames-relatorio.csv',
+                    ['Jogo', 'Plataforma', 'Preço (BRL)', 'Status', 'Criado em', 'Vendido em'],
+                    data.listings.map((l) => [
+                      l.jogo?.titulo,
+                      l.plataforma,
+                      l.preco.toFixed(2).replace('.', ','),
+                      l.status,
+                      fullDate(l.createdAt),
+                      fullDate(l.vendidoEm),
+                    ]),
+                  )
+                }
+              >
+                <Icon name="download" size={16} />
+                Exportar CSV
+              </button>
+            </div>
+            {data.listings.length ? (
+              <div className="table-wrap">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Jogo</th>
+                      <th>Plataforma</th>
+                      <th>Valor</th>
+                      <th>Status</th>
+                      <th>Data de venda</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {data.listings.map((l) => (
+                      <tr key={l.id}>
+                        <td>{l.jogo?.titulo || 'Jogo removido'}</td>
+                        <td>{l.plataforma}</td>
+                        <td>{money(l.preco)}</td>
+                        <td>
+                          <span className={`status ${l.status}`}>
+                            {
+                              { ativo: 'Disponível', vendido: 'Vendido', pausado: 'Pausado' }[
+                                l.status
+                              ]
+                            }
+                          </span>
+                        </td>
+                        <td>{fullDate(l.vendidoEm)}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            ) : (
+              <EmptyState icon="chart" title="Seu relatório começa no primeiro anúncio" />
+            )}
+            <p className="small-note">
+              Os valores correspondem a anúncios marcados manualmente como vendidos. O sistema não
+              confirma transações ou pagamentos.
+            </p>
+          </section>
+        </>
+      )}
+    </>
+  );
 }

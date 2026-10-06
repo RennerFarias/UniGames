@@ -1,1 +1,12 @@
-export default function PageTitle({ eyebrow, title, text, children }) { return <div className="page-title"><div>{eyebrow && <p className="eyebrow accent">{eyebrow}</p>}<h1>{title}</h1>{text && <p>{text}</p>}</div>{children}</div>; }
+export default function PageTitle({ eyebrow, title, text, children }) {
+  return (
+    <div className="page-title">
+      <div>
+        {eyebrow && <p className="eyebrow accent">{eyebrow}</p>}
+        <h1>{title}</h1>
+        {text && <p>{text}</p>}
+      </div>
+      {children}
+    </div>
+  );
+}
