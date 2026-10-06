@@ -104,13 +104,13 @@ async function deleteUser(id, user) {
 }
 
 function calcularIdade(dataNascimento) {
+  const [ano, mes, dia] = String(dataNascimento).split('-').map(Number);
+  const nascimento = new Date(ano, mes - 1, dia); // construído em horário local, sem shift de UTC
+  if (Number.isNaN(nascimento.getTime())) return null;
   const hoje = new Date();
-  const nascimento = new Date(dataNascimento);
   let idade = hoje.getFullYear() - nascimento.getFullYear();
-  const mes = hoje.getMonth() - nascimento.getMonth();
-  if (mes < 0 || (mes === 0 && hoje.getDate() < nascimento.getDate())) {
-    idade--;
-  }
+  const m = hoje.getMonth() - nascimento.getMonth();
+  if (m < 0 || (m === 0 && hoje.getDate() < nascimento.getDate())) idade--;
   return idade;
 }
 
@@ -126,7 +126,7 @@ async function tornarRevendedor(dataNascimentoInput, user) {
   
   const idadeAtiva = calcularIdade(dataFinal);
   
-  if (idadeAtiva < 16) {
+  if (idadeAtiva === null || idadeAtiva < 16) {
     error('Você precisa ter pelo menos 16 anos para se tornar um revendedor.', 'FORBIDDEN');
   }
   

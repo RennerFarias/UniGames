@@ -15,7 +15,7 @@ import Icon from '../components/Icon';
 import { money } from '../utils/format';
 
 export default function MeusAnuncios() {
-  const { api, notify, refresh, user } = useApp(); 
+  const { api, notify, refresh, user, updateUser} = useApp(); 
   const { data, loading, error, reload } = useResource('my-listings', () => api.myListings()); 
   const [remove, setRemove] = useState(null); 
   const [busy, setBusy] = useState(false);
@@ -39,15 +39,15 @@ export default function MeusAnuncios() {
   async function handleUpgrade(e) {
     e.preventDefault();
     try {
-      await upgradeUser({ 
+      const { data } = await upgradeUser({ 
         variables: { dataNascimento: user?.dataNascimento ? undefined : nascimento } 
       });
+      updateUser(data.tornarRevendedor);
       notify('Parabéns! Sua loja foi ativada.');
-      window.location.reload(); 
     } catch (err) {
       notify(err.message, 'error');
     }
-  }
+}
 
   if (!user?.revendedor) {
     return (
