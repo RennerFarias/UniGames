@@ -43,7 +43,7 @@ export default function MeusAnuncios() {
         variables: { dataNascimento: user?.dataNascimento ? undefined : nascimento } 
       });
       updateUser(data.tornarRevendedor);
-      notify('Parabéns! Sua loja foi ativada.');
+      notify('Pronto! Sua conta de revendedor foi ativada.');
     } catch (err) {
       notify(err.message, 'error');
     }
