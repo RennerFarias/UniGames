@@ -5,6 +5,7 @@ const Listing = require('../models/Listing');
 const PriceOffer = require('../models/PriceOffer');
 const Review = require('../models/Review');
 const User = require('../models/User');
+const { birthDate, calcularIdade } = require('../utils/birthDate');
 const error = (message, code = 'BAD_USER_INPUT') => {
   throw new GraphQLError(message, { extensions: { code } });
 };
@@ -227,29 +228,22 @@ async function deleteUser(id, user) {
   return true;
 }
 
-function calcularIdade(dataNascimento) {
-  const [ano, mes, dia] = String(dataNascimento).split('-').map(Number);
-  const nascimento = new Date(ano, mes - 1, dia); // construído em horário local, sem shift de UTC
-  if (Number.isNaN(nascimento.getTime())) return null;
-  const hoje = new Date();
-  let idade = hoje.getFullYear() - nascimento.getFullYear();
-  const m = hoje.getMonth() - nascimento.getMonth();
-  if (m < 0 || (m === 0 && hoje.getDate() < nascimento.getDate())) idade--;
-  return idade;
-}
-
 async function tornarRevendedor(dataNascimentoInput, user) {
   requireUser(user);
   if (user.revendedor) return User.findById(user.id).select('-senha');
-  
+
   const dataFinal = dataNascimentoInput || user.dataNascimento;
-  
+
   if (!dataFinal) {
-    error('Para se tornar um revendedor, você precisa informar sua data de nascimento.', 'BAD_USER_INPUT');
+    error(
+      'Para se tornar um revendedor, você precisa informar sua data de nascimento.',
+      'BAD_USER_INPUT',
+    );
   }
-  
-  const idadeAtiva = calcularIdade(dataFinal);
-  
+
+  const nascimento = birthDate(dataFinal);
+  const idadeAtiva = calcularIdade(nascimento);
+
   if (idadeAtiva === null || idadeAtiva < 16) {
     error('Você precisa ter pelo menos 16 anos para se tornar um revendedor.', 'FORBIDDEN');
   }

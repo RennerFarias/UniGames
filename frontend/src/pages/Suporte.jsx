@@ -4,15 +4,21 @@ import Icon from '../components/Icon';
 const questions = [
   [
     'Como comparar preços?',
-    'Abra um jogo no catálogo e consulte a aba “Comparar ofertas”. Você verá as lojas e seus preços lado a lado. Use os filtros para encontrar gênero, plataforma e faixa de preço.',
+    'Abra um jogo no catálogo e consulte a aba “Comparar ofertas”. ' +
+      'Você verá as lojas e seus preços lado a lado. ' +
+      'Use os filtros para encontrar gênero, plataforma e faixa de preço.',
   ],
   [
     'Como comprar um jogo?',
-    'Use o botão da oferta para abrir a loja em outra aba. A compra e o pagamento são feitos diretamente na loja. No modo de demonstração, os preços são ilustrativos e o link abre a página de referência do jogo.',
+    'Use o botão da oferta para abrir a loja em outra aba. ' +
+      'A compra e o pagamento são feitos diretamente na loja. ' +
+      'No modo de demonstração, os preços são ilustrativos e o link abre a página de referência do jogo.',
   ],
   [
     'Como anunciar um jogo físico?',
-    'Crie uma conta, entre em “Revenda” e escolha “Anunciar meu jogo”. Selecione o jogo, a plataforma, o estado da mídia, o preço e seu contato. O jogo precisa estar no catálogo.',
+    'Crie uma conta, entre em “Revenda” e escolha “Anunciar meu jogo”. ' +
+      'Selecione o jogo, a plataforma, o estado da mídia, o preço e seu contato. ' +
+      'O jogo precisa estar no catálogo.',
   ],
   [
     'Como registrar uma venda?',
@@ -20,11 +26,15 @@ const questions = [
   ],
   [
     'Como funciona o histórico de preços?',
-    'Cada oferta mantém os preços registrados por loja. Quando um administrador atualiza uma oferta, o novo valor entra no histórico. O sistema não coleta preços de lojas automaticamente.',
+    'Cada oferta mantém os preços registrados por loja. ' +
+      'Quando um administrador atualiza uma oferta, o novo valor entra no histórico. ' +
+      'O sistema não coleta preços de lojas automaticamente.',
   ],
   [
     'Como recuperar minha senha?',
-    'A recuperação por e-mail ainda não está disponível. Se você tem acesso à conta, pode alterar a senha em “Meu perfil”. Para problemas de acesso, procure a equipe responsável pelo projeto.',
+    'A recuperação por e-mail ainda não está disponível. ' +
+      'Se você tem acesso à conta, pode alterar a senha em “Meu perfil”. ' +
+      'Para problemas de acesso, procure a equipe responsável pelo projeto.',
   ],
   [
     'Os favoritos ficam salvos?',

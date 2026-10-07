@@ -3,30 +3,13 @@ const jwt = require('jsonwebtoken');
 const mongoose = require('mongoose');
 const User = require('../models/User');
 const domain = require('./domainService');
+const { birthDate, calcularIdade } = require('../utils/birthDate');
 
 const normalizeEmail = (value) =>
   String(value || '')
     .trim()
     .toLowerCase();
 const validEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-
-function birthDate(value) {
-  if (value == null || value === '') return undefined;
-
-  const text = value instanceof Date ? value.toISOString().slice(0, 10) : String(value);
-  const date = new Date(text + 'T00:00:00.000Z');
-
-  if (
-    !/^\d{4}-\d{2}-\d{2}$/.test(text) ||
-    Number.isNaN(date.getTime()) ||
-    date.toISOString().slice(0, 10) !== text ||
-    date > new Date()
-  ) {
-    domain.error('Informe uma data de nascimento válida no formato AAAA-MM-DD.');
-  }
-
-  return date;
-}
 
 function authPayload(usuario) {
   const token = jwt.sign({ id: usuario.id }, process.env.JWT_SECRET, { expiresIn: '1h' });
@@ -93,7 +76,7 @@ async function updateProfile(input, user) {
   if (input.dataNascimento !== undefined) {
     fields.dataNascimento = birthDate(input.dataNascimento);
     if (!fields.dataNascimento) domain.error('Informe sua data de nascimento.');
-    if (user.revendedor && domain.calcularIdade(fields.dataNascimento) < 16) {
+    if (user.revendedor && calcularIdade(fields.dataNascimento) < 16) {
       domain.error('Revendedores precisam ter pelo menos 16 anos.', 'FORBIDDEN');
     }
   }

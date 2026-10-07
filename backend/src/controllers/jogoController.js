@@ -1,132 +1,89 @@
 const Game = require('../models/Game');
+const PriceOffer = require('../models/PriceOffer');
+const domain = require('../services/domainService');
+const { handle } = require('./integrationController');
 
-const cadastrarJogo = async (req, res) => {
-  try {
-    const { titulo, descricao, generos, plataformas, imagemCapa, linksReferencia } = req.body;
-
-    if (!titulo) {
-      return res.status(400).json({ error: "O campo 'titulo' é obrigatório." });
-    }
-
-    const novoJogo = new Game({
-      titulo,
-      descricao,
-      generos,
-      plataformas,
-      imagemCapa,
-      linksReferencia,
-    });
-
-    await novoJogo.save();
-
-    res.status(201).json({
-      status: 'Sucesso',
-      message: 'Jogo cadastrado com sucesso!',
-      jogo: novoJogo,
-    });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
+const gameFields = (input) => {
+  const fields = {};
+  for (const key of [
+    'titulo',
+    'descricao',
+    'generos',
+    'plataformas',
+    'imagemCapa',
+    'linksReferencia',
+  ]) {
+    if (input[key] !== undefined) fields[key] = input[key];
   }
+  return fields;
 };
 
-const listarJogos = async (req, res) => {
-  try {
-    const { titulo, genero, plataforma, limite = 50, pagina = 1 } = req.query;
-
-    const query = {};
-
-    if (titulo) {
-      query.titulo = { $regex: titulo, $options: 'i' };
-    }
-
-    if (genero) {
-      query.generos = genero;
-    }
-
-    if (plataforma) {
-      query.plataformas = plataforma;
-    }
-
-    const skip = (parseInt(pagina) - 1) * parseInt(limite);
-
-    const jogos = await Game.find(query).sort({ createdAt: -1 }).skip(skip).limit(parseInt(limite));
-
-    const total = await Game.countDocuments(query);
-
-    res.status(200).json({
-      status: 'Sucesso',
-      jogos,
-      paginacao: {
-        total,
-        pagina: parseInt(pagina),
-        limite: parseInt(limite),
-        paginas: Math.ceil(total / limite),
-      },
-    });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
+function positiveInteger(value, fallback, field) {
+  if (value === undefined) return fallback;
+  const number = Number(value);
+  if (!Number.isInteger(number) || number < 1) {
+    domain.error(`Informe um ${field} inteiro maior que zero.`);
   }
-};
+  return number;
+}
 
-const obterJogoPorId = async (req, res) => {
-  try {
-    const { id } = req.params;
-    const jogo = await Game.findById(id);
+const cadastrarJogo = handle(async (req, res) => {
+  const jogo = await Game.create(gameFields(req.body));
+  res.status(201).json({
+    status: 'Sucesso',
+    message: 'Jogo cadastrado com sucesso!',
+    jogo,
+  });
+});
 
-    if (!jogo) {
-      return res.status(404).json({ error: 'Jogo não encontrado.' });
-    }
+const listarJogos = handle(async (req, res) => {
+  const { titulo, search, genero, plataforma } = req.query;
+  const pagina = positiveInteger(req.query.pagina, 1, 'número de página');
+  const limite = Math.min(100, positiveInteger(req.query.limite, 50, 'limite'));
+  const filtro = {};
+  const pesquisa = String(titulo || search || '').trim();
 
-    res.status(200).json({
-      status: 'Sucesso',
-      jogo,
-    });
-  } catch (error) {
-    if (error.kind === 'ObjectId') {
-      return res.status(400).json({ error: 'ID de jogo inválido.' });
-    }
-    res.status(500).json({ error: error.message });
+  if (pesquisa) {
+    filtro.titulo = {
+      $regex: pesquisa.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'),
+      $options: 'i',
+    };
   }
-};
+  if (genero) filtro.generos = genero;
+  if (plataforma) filtro.plataformas = plataforma;
 
-const atualizarJogo = async (req, res) => {
-  try {
-    const { id } = req.params;
-    const { titulo, descricao, generos, plataformas, imagemCapa, linksReferencia } = req.body;
+  const [jogos, total] = await Promise.all([
+    Game.find(filtro)
+      .sort({ createdAt: -1 })
+      .skip((pagina - 1) * limite)
+      .limit(limite),
+    Game.countDocuments(filtro),
+  ]);
 
-    const dadosAtualizados = {};
-    if (titulo) dadosAtualizados.titulo = titulo;
-    if (descricao !== undefined) dadosAtualizados.descricao = descricao;
-    if (generos) dadosAtualizados.generos = generos;
-    if (plataformas) dadosAtualizados.plataformas = plataformas;
-    if (imagemCapa !== undefined) dadosAtualizados.imagemCapa = imagemCapa;
-    if (linksReferencia) dadosAtualizados.linksReferencia = linksReferencia;
+  res.json({
+    status: 'Sucesso',
+    jogos,
+    paginacao: { total, pagina, limite, paginas: Math.ceil(total / limite) },
+  });
+});
 
-    const jogoAtualizado = await Game.findByIdAndUpdate(id, dadosAtualizados, {
-      returnDocument: 'after',
-      runValidators: true,
-    });
+const obterJogoPorId = handle(async (req, res) => {
+  const id = domain.validId(req.params.id);
+  const jogo = await Game.findById(id);
+  if (!jogo) domain.error('Jogo não encontrado.', 'NOT_FOUND');
+  const ofertas = await PriceOffer.find({ jogo: id }).sort({ preco: 1 });
+  res.json({ status: 'Sucesso', jogo, ofertas });
+});
 
-    if (!jogoAtualizado) {
-      return res.status(404).json({ error: 'Jogo não encontrado.' });
-    }
+const atualizarJogo = handle(async (req, res) => {
+  const id = domain.validId(req.params.id);
+  const jogo = await Game.findByIdAndUpdate(
+    id,
+    { $set: gameFields(req.body) },
+    { returnDocument: 'after', runValidators: true },
+  );
+  if (!jogo) domain.error('Jogo não encontrado.', 'NOT_FOUND');
+  res.json({ status: 'Sucesso', message: 'Jogo atualizado com sucesso!', jogo });
+});
 
-    res.status(200).json({
-      status: 'Sucesso',
-      message: 'Jogo atualizado com sucesso!',
-      jogo: jogoAtualizado,
-    });
-  } catch (error) {
-    if (error.kind === 'ObjectId') {
-      return res.status(400).json({ error: 'ID de jogo inválido.' });
-    }
-    res.status(500).json({ error: error.message });
-  }
-};
-
-module.exports = {
-  cadastrarJogo,
-  listarJogos,
-  obterJogoPorId,
-  atualizarJogo,
-};
+module.exports = { cadastrarJogo, listarJogos, obterJogoPorId, atualizarJogo };

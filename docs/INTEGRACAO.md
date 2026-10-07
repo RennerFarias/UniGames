@@ -4,32 +4,32 @@ As telas usam o objeto `api`. Ele escolhe o adaptador configurado em
 `VITE_DATA_SOURCE`. GraphQL e REST compartilham as regras de cadastro, perfil,
 revenda, ofertas e avaliações no backend.
 
-| Recurso | GraphQL | REST |
-| --- | --- | --- |
-| Cadastro e login | `register`, `login` | `POST /auth/cadastro`, `POST /auth/login` |
-| Meu perfil | `me`, `updateProfile` | `GET/PUT /usuarios/perfil` |
-| Perfil público | `getUser` | `GET /usuarios/:id` |
-| Ativar revenda | `tornarRevendedor` | `POST /usuarios/revendedor` |
-| Administrar usuários | `getUsers`, `deleteUser` | `GET /usuarios`, `DELETE /usuarios/:id` |
-| Catálogo | `getGames`, `getGame` | `GET /jogos`, `GET /jogos/:id` |
-| Gerenciar jogos | `createGame`, `updateGame`, `deleteGame` | `POST /jogos`, `PUT/DELETE /jogos/:id` |
-| Revenda pública | `getListings`, `getListing` | `GET /anuncios`, `GET /anuncios/:id` |
-| Meus anúncios | `getMyListings` | `GET /anuncios/meus` |
-| Gerenciar anúncios | `createListing`, `updateListing`, `deleteListing` | `POST /anuncios`, `PUT/DELETE /anuncios/:id` |
-| Ofertas | `getPriceOffers`, `getFeaturedOffers`, `getPriceHistory` | `GET /ofertas`, `GET /relatorios/ofertas-destaque`, `GET /relatorios/historico-precos/:jogoId` |
-| Gerenciar ofertas | `createPriceOffer`, `updatePriceOffer`, `deletePriceOffer` | `POST /ofertas`, `PUT/DELETE /ofertas/:id` |
-| Avaliações | `getReviews`, `createReview`, `updateReview`, `deleteReview` | `GET/POST /avaliacoes`, `PUT/DELETE /avaliacoes/:id` |
-| Atividade pessoal | `getMyReport` | `GET /relatorios/minha-atividade` |
-| Relatórios salvos | `getReports`, `getReport`, `generateReport`, `deleteReport` | `GET/POST /relatorios/salvos`, `GET/DELETE /relatorios/salvos/:id` |
+| Recurso              | GraphQL                                                      | REST                                                                                           |
+| -------------------- | ------------------------------------------------------------ | ---------------------------------------------------------------------------------------------- |
+| Cadastro e login     | `register`, `login`                                          | `POST /auth/register` ou `/auth/cadastro`, `POST /auth/login`                                  |
+| Meu perfil           | `me`, `updateProfile`                                        | `GET/PUT /usuarios/perfil`                                                                     |
+| Perfil público       | `getUser`                                                    | `GET /usuarios/:id`                                                                            |
+| Ativar revenda       | `tornarRevendedor`                                           | `POST /usuarios/revendedor`                                                                    |
+| Administrar usuários | `getUsers`, `deleteUser`                                     | `GET /usuarios`, `DELETE /usuarios/:id`                                                        |
+| Catálogo             | `getGames`, `getGame`                                        | `GET /jogos`, `GET /jogos/:id`                                                                 |
+| Gerenciar jogos      | `createGame`, `updateGame`, `deleteGame`                     | `POST /jogos`, `PUT/DELETE /jogos/:id`                                                         |
+| Revenda pública      | `getListings`, `getListing`                                  | `GET /revendas`, `GET /revendas/:id`                                                           |
+| Meus anúncios        | `getMyListings`                                              | `GET /revendas/meus`                                                                           |
+| Gerenciar anúncios   | `createListing`, `updateListing`, `deleteListing`            | `POST /revendas`, `PUT/DELETE /revendas/:id`                                                   |
+| Ofertas              | `getPriceOffers`, `getFeaturedOffers`, `getPriceHistory`     | `GET /ofertas`, `GET /relatorios/ofertas-destaque`, `GET /relatorios/historico-precos/:jogoId` |
+| Gerenciar ofertas    | `createPriceOffer`, `updatePriceOffer`, `deletePriceOffer`   | `POST /ofertas`, `PUT/DELETE /ofertas/:id`                                                     |
+| Avaliações           | `getReviews`, `createReview`, `updateReview`, `deleteReview` | `GET/POST /avaliacoes`, `PUT/DELETE /avaliacoes/:id`                                           |
+| Atividade pessoal    | `getMyReport`                                                | `GET /relatorios/minha-atividade`                                                              |
+| Relatórios salvos    | `getReports`, `getReport`, `generateReport`, `deleteReport`  | `GET/POST /relatorios/salvos`, `GET/DELETE /relatorios/salvos/:id`                             |
 
 ## Tipos de relatório
 
-| GraphQL | Valor armazenado no MongoDB e usado no REST | Dados gerados |
-| --- | --- | --- |
-| `ATIVIDADE_USUARIOS` | `atividade_usuarios` | Total de usuários e anúncios agrupados por status |
-| `OFERTAS_DESTAQUE` | `ofertas_destaque` | Até 10 ofertas ordenadas por desconto |
-| `VARIACAO_PRECOS` | `variacao_precos` | Histórico registrado das ofertas |
-| `BUSCAS_FREQUENTES` | `buscas_frequentes` | Geração indisponível: falta registrar as pesquisas |
+| GraphQL              | Valor armazenado no MongoDB e usado no REST | Dados gerados                                      |
+| -------------------- | ------------------------------------------- | -------------------------------------------------- |
+| `ATIVIDADE_USUARIOS` | `atividade_usuarios`                        | Total de usuários e anúncios agrupados por status  |
+| `OFERTAS_DESTAQUE`   | `ofertas_destaque`                          | Até 10 ofertas ordenadas por desconto              |
+| `VARIACAO_PRECOS`    | `variacao_precos`                           | Histórico registrado das ofertas                   |
+| `BUSCAS_FREQUENTES`  | `buscas_frequentes`                         | Geração indisponível: falta registrar as pesquisas |
 
 Os relatórios salvos são snapshots do momento da geração e exigem administrador.
 O relatório pessoal é calculado no momento da consulta e mostra os anúncios da
@@ -64,5 +64,15 @@ os resultados podem ser normalizados e gravados em `PriceOffer`. As telas
 já leem essas ofertas. Chaves privadas não devem entrar em variáveis `VITE_*`,
 pois elas são enviadas ao navegador.
 
-O documento inicial citava `/auth/register` e `/revendas`. Os endpoints em uso
-no código são `/auth/cadastro` e `/anuncios`.
+As rotas `/auth/register` e `/revendas` correspondem ao documento inicial.
+Os caminhos `/auth/cadastro` e `/anuncios` continuam disponíveis como aliases
+das mesmas operações, com as mesmas permissões. O adaptador REST das telas
+também pode continuar usando esses aliases.
+
+`GET /jogos` aceita `titulo` ou `search`, `genero`, `plataforma`, `pagina` e
+`limite`. Página e limite precisam ser inteiros positivos; o limite máximo é 100.
+A busca trata os caracteres especiais como texto. `GET /jogos/:id` retorna
+`jogo` e suas `ofertas`, ordenadas por preço.
+
+`GET /revendas` e `GET /anuncios` aceitam `jogoId`, `plataforma`,
+`estadoConservacao`, `precoMaximo`, `pagina` e `limite`.

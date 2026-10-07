@@ -51,11 +51,11 @@ npm.cmd run dev
 
 Abra `http://localhost:5173`. O arquivo de exemplo usa `VITE_DATA_SOURCE=graphql`.
 
-| Valor | Origem dos dados |
-| --- | --- |
-| `graphql` | Backend Apollo e MongoDB |
-| `rest` | Rotas Express e MongoDB |
-| `demo` | Dados locais do navegador, sem MongoDB |
+| Valor     | Origem dos dados                       |
+| --------- | -------------------------------------- |
+| `graphql` | Backend Apollo e MongoDB               |
+| `rest`    | Rotas Express e MongoDB                |
+| `demo`    | Dados locais do navegador, sem MongoDB |
 
 Reinicie o Vite depois de alterar o `.env`. No Windows,
 `Iniciar_UniGames.bat` ajuda a abrir o projeto depois da configuração.
@@ -76,26 +76,38 @@ No modo demo, as contas `demo@unigames.com` e `admin@unigames.com` usam
 
 ## Onde está cada parte
 
-| Arquivo ou pasta | Responsabilidade |
-| --- | --- |
-| `backend/src/database.js` | Abre a conexão do Mongoose com o MongoDB |
-| `backend/src/server.js` | Carrega o ambiente, inicia Express e disponibiliza GraphQL |
-| `backend/src/models/` | Define os documentos e suas referências |
-| `backend/src/graphql/typeDefs.js` | Declara tipos, entradas, consultas e mutations |
-| `backend/src/graphql/resolvers/` | Organiza as operações por entidade |
-| `backend/src/services/userService.js` | Cadastro, login, perfil e leitura do JWT |
-| `backend/src/services/domainService.js` | Revenda, preços, avaliações e permissões |
-| `backend/src/services/reportService.js` | Gera e consulta relatórios salvos |
-| `frontend/src/services/api.js` | Escolhe demo, GraphQL ou REST |
-| `frontend/src/services/apollo.js` | Configura o cliente HTTP e o envio do token |
-| `frontend/src/services/graphql.js` | Executa as operações e monta as entidades do front |
-| `frontend/src/graphql/` | Guarda as queries, mutations e fragments |
-| `frontend/src/models/entities.js` | Classes usadas para organizar os dados das telas |
+| Arquivo ou pasta                        | Responsabilidade                                           |
+| --------------------------------------- | ---------------------------------------------------------- |
+| `backend/src/database.js`               | Abre a conexão do Mongoose com o MongoDB                   |
+| `backend/src/server.js`                 | Carrega o ambiente, inicia Express e disponibiliza GraphQL |
+| `backend/src/models/`                   | Define os documentos e suas referências                    |
+| `backend/src/graphql/typeDefs.js`       | Declara tipos, entradas, consultas e mutations             |
+| `backend/src/graphql/resolvers/`        | Organiza as operações por entidade                         |
+| `backend/src/services/userService.js`   | Cadastro, login, perfil e leitura do JWT                   |
+| `backend/src/services/domainService.js` | Revenda, preços, avaliações e permissões                   |
+| `backend/src/services/reportService.js` | Gera e consulta relatórios salvos                          |
+| `frontend/src/services/api.js`          | Escolhe demo, GraphQL ou REST                              |
+| `frontend/src/services/apollo.js`       | Configura o cliente HTTP e o envio do token                |
+| `frontend/src/services/graphql.js`      | Executa as operações e monta as entidades do front         |
+| `frontend/src/graphql/`                 | Guarda as queries, mutations e fragments                   |
+| `frontend/src/models/entities.js`       | Classes usadas para organizar os dados das telas           |
 
 A explicação completa está em `docs/GUIA_APRESENTACAO.md`. Há exemplos de operações
 em `docs/EXEMPLOS_GRAPHQL.graphql` e a lista de recursos em `docs/INTEGRACAO.md`.
 
 ## Verificar
+
+Para manter a formatação do grupo, instale também as dependências da pasta
+principal. A configuração usa dois espaços, linhas de até 100 caracteres
+quando possível e arquivos de texto em UTF-8.
+
+```powershell
+npm.cmd ci
+npm.cmd run format
+npm.cmd run format:check
+```
+
+Os comandos acima usam o Prettier somente para formatação. Para validar a aplicação:
 
 ```powershell
 npm.cmd test --prefix backend
@@ -103,6 +115,10 @@ npm.cmd test --prefix frontend
 npm.cmd run lint --prefix frontend
 npm.cmd run build --prefix frontend
 ```
+
+O resultado da comparação com o Word está em `docs/REVISAO_ESCOPO.md`.
+O documento de escopo mantém as funcionalidades originais e recebeu ajustes
+de títulos, tabelas, espaçamento e diagrama de arquitetura.
 
 A integração com um banco local de teste usa `TEST_MONGODB_URI`. Ela aceita
 somente localhost ou 127.0.0.1 e um banco com prefixo `unigames_test_`.

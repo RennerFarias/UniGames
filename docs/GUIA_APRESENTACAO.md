@@ -1,4 +1,5 @@
 # UniGames: MongoDB e GraphQL
+
 Roteiro de apresentação • José Artur • Sistemas de Informação
 
 ## 1. Como explicar a arquitetura
@@ -16,13 +17,13 @@ locais do navegador.
 Na versão revisada, o arquivo de configuração de exemplo usa GraphQL. A conexão
 continua sendo feita pelo Mongoose, e o servidor aguarda o banco antes de abrir.
 
-| Parte | O que faz no projeto |
-| --- | --- |
-| React | Mostra as páginas e recebe os dados dos formulários |
-| Apollo Client | Envia queries e mutations para o backend |
-| Express + Apollo Server | Recebem as requisições em `/graphql` |
-| Services + models do Mongoose | Aplicam as regras e consultam ou gravam documentos |
-| MongoDB | Armazena usuários, jogos, ofertas, anúncios, avaliações e relatórios |
+| Parte                         | O que faz no projeto                                                 |
+| ----------------------------- | -------------------------------------------------------------------- |
+| React                         | Mostra as páginas e recebe os dados dos formulários                  |
+| Apollo Client                 | Envia queries e mutations para o backend                             |
+| Express + Apollo Server       | Recebem as requisições em `/graphql`                                 |
+| Services + models do Mongoose | Aplicam as regras e consultam ou gravam documentos                   |
+| MongoDB                       | Armazena usuários, jogos, ofertas, anúncios, avaliações e relatórios |
 
 Uma explicação curta para começar:
 
@@ -109,8 +110,14 @@ mutation CriarAnuncio($input: CreateListingInput!) {
     id
     preco
     status
-    jogo { id titulo }
-    vendedor { id nome }
+    jogo {
+      id
+      titulo
+    }
+    vendedor {
+      id
+      nome
+    }
   }
 }
 ```
@@ -189,13 +196,13 @@ usa esse serviço e atualiza a sessão sem recarregar a página.
 MongoDB usa coleções de documentos. Neste projeto, algumas relações são
 armazenadas com ObjectId e a opção `ref` dos schemas do Mongoose.
 
-| Campo | Referência |
-| --- | --- |
-| `Listing.jogo` | Documento de Game |
-| `Listing.vendedor` | Documento de User |
-| `PriceOffer.jogo` | Documento de Game |
-| `Review.avaliador` | Usuário que escreveu a avaliação |
-| `Review.jogo` ou `Review.avaliadoUser` | Um único alvo da avaliação |
+| Campo                                  | Referência                       |
+| -------------------------------------- | -------------------------------- |
+| `Listing.jogo`                         | Documento de Game                |
+| `Listing.vendedor`                     | Documento de User                |
+| `PriceOffer.jogo`                      | Documento de Game                |
+| `Review.avaliador`                     | Usuário que escreveu a avaliação |
+| `Review.jogo` ou `Review.avaliadoUser` | Um único alvo da avaliação       |
 
 O método `populate` busca os documentos referenciados e preenche os dados que
 serão exibidos. Por isso a tela pode receber o título do jogo e o nome do
@@ -213,14 +220,14 @@ As classes de JavaScript usadas pelas telas estão em `entities.js`.
 Os schemas do Mongoose e o schema do GraphQL têm papéis diferentes:
 o primeiro define o documento do banco; o segundo define o contrato da API.
 
-| Entidade | Operações principais |
-| --- | --- |
-| User | Cadastro, login, meu perfil, perfil público, edição, ativação de revenda, listagem administrativa e exclusão |
-| Game | Consulta, pesquisa, filtros, criação, edição e exclusão |
-| Listing | Anúncios públicos e pessoais, detalhes, criação, edição e exclusão |
-| PriceOffer | Ofertas, destaques, histórico, criação, atualização e exclusão |
-| Review | Consulta por jogo ou usuário, criação, edição e exclusão |
-| Report | Geração, consulta e exclusão de relatórios salvos |
+| Entidade   | Operações principais                                                                                         |
+| ---------- | ------------------------------------------------------------------------------------------------------------ |
+| User       | Cadastro, login, meu perfil, perfil público, edição, ativação de revenda, listagem administrativa e exclusão |
+| Game       | Consulta, pesquisa, filtros, criação, edição e exclusão                                                      |
+| Listing    | Anúncios públicos e pessoais, detalhes, criação, edição e exclusão                                           |
+| PriceOffer | Ofertas, destaques, histórico, criação, atualização e exclusão                                               |
+| Review     | Consulta por jogo ou usuário, criação, edição e exclusão                                                     |
+| Report     | Geração, consulta e exclusão de relatórios salvos                                                            |
 
 `backend/src/graphql/typeDefs.js` declara esses contratos. Cada entidade tem
 um arquivo em `backend/src/graphql/resolvers/`. O arquivo `resolvers.js`

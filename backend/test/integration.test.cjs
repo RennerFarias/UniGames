@@ -362,7 +362,7 @@ test(
         senha: 'senha-teste-123',
         dataNascimento: '2001-03-04',
       };
-      const registered = await rest('/auth/cadastro', 'POST', input);
+      const registered = await rest('/auth/register', 'POST', input);
       assert.equal(registered.status, 201);
       assert.equal(registered.body.usuario.senha, undefined);
       const auth = await rest('/auth/login', 'POST', input);
@@ -377,6 +377,25 @@ test(
       assert.equal((await rest('/usuarios/perfil')).status, 401);
       await rest('/usuarios/' + auth.body.usuario._id, 'DELETE', null, admin.token);
       assert.equal((await rest('/usuarios/perfil', 'GET', null, token)).status, 401);
+    });
+
+    await t.test('REST atende às rotas do escopo e valida pesquisa e paginação', async () => {
+      const games = await rest('/jogos?titulo=' + encodeURIComponent('{Teste}'));
+      assert.equal(games.status, 200);
+      assert.equal(games.body.jogos[0]._id, gameId);
+      assert.equal((await rest('/jogos?titulo=%5B')).status, 200);
+      assert.equal((await rest('/jogos?limite=0')).status, 400);
+      assert.equal((await rest('/jogos?pagina=abc')).status, 400);
+      const details = await rest('/jogos/' + gameId);
+      assert.equal(details.body.ofertas[0]._id, offerId);
+      assert.equal((await rest('/revendas')).status, 200);
+      assert.equal((await rest('/revendas?precoMaximo=-1')).status, 400);
+      assert.equal((await rest('/revendas/' + listingId, 'GET', null, seller.token)).status, 200);
+      assert.equal(
+        (await rest('/revendas/' + listingId, 'PUT', { preco: 1 }, other.token)).status,
+        403,
+      );
+      assert.equal((await rest('/revendas/' + listingId, 'DELETE', null, other.token)).status, 403);
     });
 
     await t.test('exclusões preservam vínculos e respeitam as permissões', async () => {

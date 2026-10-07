@@ -25,7 +25,10 @@ module.exports = {
   handle,
   createListing: handle(async (req, res) =>
     res.status(201).json({
-      anuncio: await domain.createListing({ ...req.body, jogoId: req.body.jogo }, req.usuario),
+      anuncio: await domain.createListing(
+        { ...req.body, jogoId: req.body.jogoId || req.body.jogo },
+        req.usuario,
+      ),
     }),
   ),
   updateListing: handle(async (req, res) =>
@@ -47,6 +50,14 @@ module.exports = {
     const query = { ...domain.publicListings };
     if (req.query.plataforma) query.plataforma = req.query.plataforma;
     if (req.query.estadoConservacao) query.estadoConservacao = req.query.estadoConservacao;
+    if (req.query.jogoId) query.jogo = domain.validId(req.query.jogoId);
+    if (req.query.precoMaximo !== undefined) {
+      const precoMaximo = Number(req.query.precoMaximo);
+      if (!Number.isFinite(precoMaximo) || precoMaximo < 0) {
+        domain.error('Informe um preço máximo não negativo.');
+      }
+      query.preco = { $lte: precoMaximo };
+    }
     const [anuncios, total] = await Promise.all([
       domain.populated(
         Listing.find(query)

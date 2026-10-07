@@ -13,9 +13,9 @@ import Icon from '../components/Icon';
 import { money } from '../utils/format';
 
 export default function MeusAnuncios() {
-  const { api, notify, refresh, user, updateUser} = useApp(); 
-  const { data, loading, error, reload } = useResource('my-listings', () => api.myListings()); 
-  const [remove, setRemove] = useState(null); 
+  const { api, notify, refresh, user, updateUser } = useApp();
+  const { data, loading, error, reload } = useResource('my-listings', () => api.myListings());
+  const [remove, setRemove] = useState(null);
   const [busy, setBusy] = useState(false);
   const [nascimento, setNascimento] = useState('');
   const [activating, setActivating] = useState(false);
@@ -24,17 +24,16 @@ export default function MeusAnuncios() {
   async function deleteListing() {
     setBusy(true);
     try {
-      const { data } = await upgradeUser({ 
-        variables: { dataNascimento: user?.dataNascimento ? undefined : nascimento } 
-      });
-      updateUser(data.tornarRevendedor);
-      notify('Pronto! Sua conta de revendedor foi ativada.');
+      await api.deleteListing(remove.id);
+      setRemove(null);
+      refresh();
+      notify('Anúncio excluído.');
     } catch (err) {
       notify(err.message, 'error');
     } finally {
       setBusy(false);
     }
-}
+  }
 
   async function handleUpgrade(event) {
     event.preventDefault();
